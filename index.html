@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Behance 每日热门创意</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      background: #0a0a0a; color: #e0e0e0; min-height: 100vh;
+    }
+    .layout { display: flex; min-height: 100vh; }
+
+    /* Sidebar */
+    .sidebar {
+      width: 200px; min-width: 200px;
+      background: #0e0e0e; border-right: 1px solid #1a1a1a;
+      padding: 20px 0; position: sticky; top: 0; height: 100vh;
+      overflow-y: auto; flex-shrink: 0;
+    }
+    .sidebar-title {
+      font-size: 13px; color: #555; text-transform: uppercase;
+      letter-spacing: 1px; padding: 0 16px 12px; font-weight: 600;
+    }
+    .date-btn {
+      display: flex; justify-content: space-between; align-items: center;
+      width: 100%; padding: 10px 16px; border: none;
+      background: transparent; color: #888; font-size: 13px;
+      cursor: pointer; text-align: left; transition: all 0.15s;
+      font-family: inherit;
+    }
+    .date-btn:hover { background: #151515; color: #ccc; }
+    .date-btn.active {
+      background: #1a1a2a; color: #fff;
+      border-left: 3px solid #1769ff;
+    }
+    .date-btn .wd { font-size: 11px; color: #555; }
+    .date-btn.active .wd { color: #6f8fcf; }
+
+    /* Main content */
+    .main { flex: 1; max-width: 780px; padding: 24px 24px 60px; }
+    header {
+      padding: 32px 0 24px; border-bottom: 1px solid #222;
+      margin-bottom: 24px;
+    }
+    header h1 { font-size: 26px; font-weight: 700; color: #fff; letter-spacing: -0.5px; }
+    header h1 span { color: #1769ff; }
+    header p { margin-top: 6px; color: #666; font-size: 13px; }
+
+    .day-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 16px; padding-bottom: 8px;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    .day-header h2 { font-size: 18px; font-weight: 600; color: #ccc; }
+    .wd-label { font-size: 14px; color: #555; font-weight: 400; margin-left: 6px; }
+    .day-count { font-size: 12px; color: #555; }
+
+    .cards { display: flex; flex-direction: column; gap: 10px; }
+    .card {
+      display: flex; align-items: stretch; gap: 14px;
+      padding: 14px; background: #111;
+      border-radius: 12px; transition: background 0.2s, transform 0.15s;
+    }
+    .card:hover { background: #181818; transform: translateY(-1px); }
+    .card.top3 { border-left: 3px solid #1769ff; }
+    .rank {
+      font-size: 18px; min-width: 32px;
+      display: flex; align-items: center; justify-content: center;
+      color: #444; font-weight: 700;
+    }
+    .card.top3 .rank { font-size: 22px; }
+    .cover-wrap {
+      width: 140px; min-width: 140px; height: 100px;
+      border-radius: 8px; overflow: hidden;
+      background: #1a1a1a; flex-shrink: 0;
+    }
+    .cover-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+    .title {
+      font-size: 14px; font-weight: 600; color: #e8e8e8;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .title a { color: #e8e8e8; text-decoration: none; }
+    .title a:hover { color: #1769ff; }
+    .tags { display: flex; gap: 5px; flex-wrap: wrap; }
+    .tag {
+      font-size: 11px; padding: 2px 7px;
+      border-radius: 4px; font-weight: 500;
+    }
+    .tag.industry { background: #1a2a1a; color: #6fcf6f; }
+    .tag.medium { background: #1a1a2a; color: #6f8fcf; }
+    .brief {
+      font-size: 12px; color: #888; line-height: 1.4;
+      display: -webkit-box; -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical; overflow: hidden;
+    }
+    .stats {
+      font-size: 11px; color: #555;
+      display: flex; gap: 12px; margin-top: auto;
+    }
+    .appreciations { color: #e8556d; }
+    .views { color: #777; }
+
+    .empty { text-align: center; padding: 60px 20px; color: #555; }
+    footer {
+      text-align: center; padding: 24px 0; color: #333;
+      font-size: 11px; border-top: 1px solid #141414; margin-top: 40px;
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      .layout { flex-direction: column; }
+      .sidebar {
+        width: 100%; min-width: 100%; height: auto;
+        position: relative; border-right: none;
+        border-bottom: 1px solid #1a1a1a;
+        display: flex; flex-wrap: nowrap; overflow-x: auto;
+        padding: 12px 8px; gap: 4px;
+      }
+      .sidebar-title { display: none; }
+      .date-btn {
+        flex-shrink: 0; padding: 8px 12px;
+        border-radius: 6px; white-space: nowrap;
+      }
+      .date-btn .wd { display: none; }
+      .date-btn.active { border-left: none; border-bottom: 2px solid #1769ff; }
+      .main { padding: 16px 12px 40px; }
+      header h1 { font-size: 20px; }
+      .card { padding: 10px; gap: 10px; }
+      .cover-wrap { width: 100px; min-width: 100px; height: 72px; }
+      .title { font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <nav class="sidebar">
+      <div class="sidebar-title">📅 历史榜单</div>
+      <button class="date-btn active" data-date="2026-03-27" onclick="showDay('2026-03-27')">2026-03-27<span class="wd">周五</span></button>
+        <button class="date-btn " data-date="2026-03-26" onclick="showDay('2026-03-26')">2026-03-26<span class="wd">周四</span></button>
+    </nav>
+    <div class="main">
+      <header>
+        <h1>🎨 <span>Behance</span> 每日热门创意</h1>
+        <p>自动抓取 Behance 本周热门作品 · 含行业分类、媒介类型与简介 · 每日 09:30 更新</p>
+      </header>
+      
+        <section class="day" id="day-2026-03-27" >
+          <div class="day-header">
+            <h2>2026-03-27 <span class="wd-label">周五</span></h2>
+            <span class="day-count">10 个作品</span>
+          </div>
+          <div class="cards">
+          <div class="card top3">
+            <div class="rank">🥇</div>
+            <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/311e61223625807.Y3JvcCwzMzk1LDI2NTUsMzE5LDIwNjc.jpg" alt="Call Me Latter" loading="lazy"></div>
+            <div class="info">
+              <div class="title"><a href="https://www.behance.net/gallery/223625807/Call-Me-Latter" target="_blank">Call Me Latter</a></div>
+              <div class="tags">
+                <span class="tag industry">餐饮</span>
+                <span class="tag medium">品牌VI</span>
+              </div>
+              <div class="brief">咖啡品牌全案视觉识别系统设计，涵盖标志、包装与物料</div>
+              <div class="stats">
+                <span class="appreciations">❤️ 4,702</span>
+                <span class="views">👁️ 45,407</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card top3">
+            <div class="rank">🥈</div>
+            <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/f3afc8244803829.Y3JvcCw4MDgsNjMyLDAsMA.png" alt="PORTFOLIO 2026 - GRAPHIC DESIGNER &amp; ILLUSTRATOR" loading="lazy"></div>
+            <div class="info">
+              <div class="title"><a href="https://www.behance.net/gallery/244803829/PORTFOLIO-2026-GRAPHIC-DESIGNER-ILLUSTRATOR" target="_blank">PORTFOLIO 2026 - GRAPHIC DESIGNER &amp; ILLUSTRATOR</a></div>
+              <div class="tags">
+                <span class="tag industry">设计服务</span>
+                <span class="tag medium">平面设计/插画</span>
+              </div>
+              <div class="brief">设计师2026年度作品集，展示平面与插画综合能力</div>
+              <div class="stats">
+                <span class="appreciations">❤️ 2,320</span>
+                <span class="views">👁️ 27,860</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card top3">
+            <div class="rank">🥉</div>
+            <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/7e66d8242023175.Y3JvcCwzMjMyLDI1MjgsMCww.jpg" alt="UI/UX for Wellness Aging Care Mood &amp; Meds Tracking app" loading="lazy"></div>
+            <div class="info">
+              <div class="title"><a href="https://www.behance.net/gallery/242023175/UIUX-for-Wellness-Aging-Care-Mood-Meds-Tracking-app" target="_blank">UI/UX for Wellness Aging Care Mood &amp; Meds Tracking app</a></div>
+              <div class="tags">
+                <span class="tag industry">医疗健康</span>
+                <span class="tag medium">UI/UX</span>
+              </div>
+              <div class="brief">老年健康护理App，追踪情绪与用药的界面设计</div>
+              <div class="stats">
+                <span class="appreciations">❤️ 2,091</span>
+                <span class="views">👁️ 16,438</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card ">
+            <div class="rank">4</div>
+            <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/50a845229381599.Y3JvcCwyMzQ1LDE4MzQsNSw1Mg.png" alt="ARTICA® — ID" loading="lazy"></div>
+            <div class="info">
+              <div class="title"><a href="https://www.behance.net/gallery/229381599/ARTICA-ID" target="_blank">ARTICA® — ID</a></div>
+              <div class="tags">
+                <span class="tag industry">时尚/生活方式</span>
+                <span class="tag medium">品牌VI</span>
+              </div>
+              <div class="brief">ARTICA品牌视觉识别系统，极简北欧风格设计</div>
+              <div class="stats">
+                <span class="appreciations">❤️ 1,314</span>
+                <span class="views">👁️ 13,632</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card ">
+            <div class="rank">5</div>
+            <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/e5e419245685623.Y3JvcCwyNTgzLDIwMjAsMCw2.jpg" alt="OFFBRiEFF" loading="lazy"></div>
+            <div class="info">
+              <div class="title"><a href="https://www.behance.net/gallery/245685623/OFFBRiEFF" target="_blank">OFFBRiEFF</a></div>
+              <div class="tags">
+                <span class="tag industry">文化艺术</span>
+                <span class="tag medium">平面设计</span>
+              </div>
+              <div class="brief">创意Brief主题的实验性平面设计项目</div>
+              <div class="stats">
+                <span class="appreciations">❤️ 1,042</span>
+                <span class="views">👁️ 6,737</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card ">
+            <div class="rank">6</div>
+            <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/a512de245516287.Y3JvcCwxNjE2LDEyNjQsMCww.png" alt="Portfolio 2026" loading="lazy"></div>
+            <div class="info">
+              <div class="title"><a href="https://www.behance.net/gallery/245516287/Portfolio-2026" target="_blank">Portfolio 2026</a></div>
+              <div class="tags">
+                <span class="tag industry">设计服务</span>
+                <span class="tag medium">品牌VI/平面设计</span>
+              </div>
+              <div class="brief">设计师年度精选作品集，涵盖品牌与视觉项目</div>
+              <div class="stats">
+                <span class="appreciations">❤️ 992</span>
+                <span class="views">👁️ 18,378</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card ">
+            <div class="rank">7</div>
+            <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/63f67b239209175.Y3JvcCwxMjEyLDk0OCwwLDA.png" alt="Esmée Van Arden — UX/UI" loading="lazy"></div>
+            <div class="info">
+              <div class="title"><a href="https://www.behance.net/gallery/239209175/Esme-Van-Arden-UXUI" target="_blank">Esmée Van Arden — UX/UI</a></div>
+              <div class="tags">
+                <span class="tag industry">设计服务</span>
+                <span class="tag medium">UI/UX</span>
+              </div>
+              <div class="brief">UX/UI设计师个人作品集，展示交互与界面设计</div>
+              <div class="stats">
+                <span class="appreciations">❤️ 979</span>
+                <span class="views">👁️ 5,754</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card ">
+            <div class="rank">8</div>
+            <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/914a51245967243.Y3JvcCwxOTc4LDE1NDcsNzEwLDI5.jpg" alt="ARHA Jewellery" loading="lazy"></div>
+            <div class="info">
+              <div class="title"><a href="https://www.behance.net/gallery/245967243/ARHA-Jewellery" target="_blank">ARHA Jewellery</a></div>
+              <div class="tags">
+                <span class="tag industry">珠宝/奢侈品</span>
+                <span class="tag medium">品牌VI</span>
+              </div>
+              <div class="brief">高端珠宝品牌视觉设计，优雅精致的标识与物料</div>
+              <div class="stats">
+                <span class="appreciations">❤️ 820</span>
+                <span class="views">👁️ 4,701</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card ">
+            <div class="rank">9</div>
+            <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/8754f7246100327.69bc2a7e5cdea.jpg" alt="LIM PORTFOLIO" loading="lazy"></div>
+            <div class="info">
+              <div class="title"><a href="https://www.behance.net/gallery/246100327/LIM-PORTFOLIO" target="_blank">LIM PORTFOLIO</a></div>
+              <div class="tags">
+                <span class="tag industry">设计服务</span>
+                <span class="tag medium">平面设计</span>
+              </div>
+              <div class="brief">设计师作品集，展示多领域平面设计综合实力</div>
+              <div class="stats">
+                <span class="appreciations">❤️ 756</span>
+                <span class="views">👁️ 19,545</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card ">
+            <div class="rank">10</div>
+            <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/bd7768244771131.Y3JvcCw3NTYsNTkyLDIyNiwyMDQ.png" alt="Fasttea Branding &amp; Packaging" loading="lazy"></div>
+            <div class="info">
+              <div class="title"><a href="https://www.behance.net/gallery/244771131/Fasttea-Branding-Packaging" target="_blank">Fasttea Branding &amp; Packaging</a></div>
+              <div class="tags">
+                <span class="tag industry">餐饮/茶饮</span>
+                <span class="tag medium">包装设计/品牌VI</span>
+              </div>
+              <div class="brief">快茶品牌全案，从标志到茶饮包装的系统设计</div>
+              <div class="stats">
+                <span class="appreciations">❤️ 533</span>
+                <span class="views">👁️ 3,792</span>
+              </div>
+            </div>
+          </div>
+          </div>
+        </section>
+
+        <section class="day" id="day-2026-03-26" style="display:none">
+          <div class="day-header">
+            <h2>2026-03-26 <span class="wd-label">周四</span></h2>
+            <span class="day-count">3 个作品</span>
+          </div>
+          <div class="cards">
+          <div class="card top3">
+            <div class="rank">🥇</div>
+            <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/c7a1f3233647177.Y3JvcCwxMjAwLDkzOCwwLDA.jpg" alt="VOOO" loading="lazy"></div>
+            <div class="info">
+              <div class="title"><a href="https://www.behance.net/gallery/233647177/VOOO" target="_blank">VOOO</a></div>
+              <div class="tags">
+                <span class="tag industry">科技</span>
+                <span class="tag medium">品牌VI</span>
+              </div>
+              <div class="brief">科技品牌全案视觉设计，极简未来感标识系统</div>
+              <div class="stats">
+                <span class="appreciations">❤️ 994</span>
+                <span class="views">👁️ 10,538</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card top3">
+            <div class="rank">🥈</div>
+            <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/5e0e47232541177.Y3JvcCwyMDQ4LDE2MDIsMCww.jpg" alt="XPENG X9" loading="lazy"></div>
+            <div class="info">
+              <div class="title"><a href="https://www.behance.net/gallery/232541177/XPENG-X9" target="_blank">XPENG X9</a></div>
+              <div class="tags">
+                <span class="tag industry">汽车</span>
+                <span class="tag medium">产品设计/3D渲染</span>
+              </div>
+              <div class="brief">小鹏X9汽车造型设计展示，科技感MPV概念</div>
+              <div class="stats">
+                <span class="appreciations">❤️ 632</span>
+                <span class="views">👁️ 4,305</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card top3">
+            <div class="rank">🥉</div>
+            <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/ab1234234120000.Y3JvcCwxMjAwLDkzOCwwLDA.jpg" alt="Samsung Weather App" loading="lazy"></div>
+            <div class="info">
+              <div class="title"><a href="https://www.behance.net/gallery/234120000/Samsung-Weather-App" target="_blank">Samsung Weather App</a></div>
+              <div class="tags">
+                <span class="tag industry">科技/消费电子</span>
+                <span class="tag medium">UI/UX</span>
+              </div>
+              <div class="brief">三星天气App重设计，清爽直观的天气界面体验</div>
+              <div class="stats">
+                <span class="appreciations">❤️ 76</span>
+                <span class="views">👁️ 451</span>
+              </div>
+            </div>
+          </div>
+          </div>
+        </section>
+      <footer>Powered by AOI 🔷 · 数据来源: Behance</footer>
+    </div>
+  </div>
+  <script>
+    function showDay(date) {
+      document.querySelectorAll('.day').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('.date-btn').forEach(el => el.classList.remove('active'));
+      const target = document.getElementById('day-' + date);
+      if (target) target.style.display = '';
+      const btn = document.querySelector('.date-btn[data-date="' + date + '"]');
+      if (btn) btn.classList.add('active');
+    }
+  </script>
+</body>
+</html>
