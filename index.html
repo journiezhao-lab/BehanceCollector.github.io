@@ -13,61 +13,56 @@
     }
     .layout { display: flex; min-height: 100vh; }
     .sidebar {
-      width: 200px; min-width: 200px;
+      width: 220px; min-width: 220px;
       background: #0e0e0e; border-right: 1px solid #1a1a1a;
       padding: 20px 0; position: sticky; top: 0; height: 100vh;
       overflow-y: auto; flex-shrink: 0;
     }
-    .sidebar-title {
-      font-size: 13px; color: #555; text-transform: uppercase;
-      letter-spacing: 1px; padding: 0 16px 12px; font-weight: 600;
+    .sidebar-section-title {
+      font-size: 12px; color: #555; text-transform: uppercase;
+      letter-spacing: 1px; padding: 0 16px 10px; font-weight: 700;
     }
-    .date-btn {
+    .nav-link, .history-toggle, .date-item {
       display: flex; justify-content: space-between; align-items: center;
-      width: 100%; padding: 10px 16px; border: none;
-      background: transparent; color: #888; font-size: 13px;
-      cursor: pointer; text-align: left; transition: all 0.15s;
-      font-family: inherit;
+      width: 100%; padding: 10px 16px; border: none; background: transparent;
+      color: #8e8e8e; font-size: 13px; cursor: pointer; text-align: left;
+      transition: all 0.15s; font-family: inherit;
     }
-    .date-btn:hover { background: #151515; color: #ccc; }
-    .date-btn.active {
-      background: #1a1a2a; color: #fff;
-      border-left: 3px solid #1769ff;
+    .nav-link:hover, .history-toggle:hover, .date-item:hover { background: #151515; color: #ddd; }
+    .nav-link.active, .history-toggle.active, .date-item.active {
+      background: #1a1a2a; color: #fff; border-left: 3px solid #1769ff;
     }
-    .date-btn .wd { font-size: 11px; color: #555; }
-    .date-btn.active .wd { color: #6f8fcf; }
+    .history-toggle::after {
+      content: '▾'; font-size: 12px; color: #666; transition: transform 0.15s;
+    }
+    .history-group.collapsed .history-toggle::after { transform: rotate(-90deg); }
+    .history-list { display: block; }
+    .history-group.collapsed .history-list { display: none; }
+    .date-item { padding-left: 26px; font-size: 12px; color: #777; }
+    .date-item .wd { font-size: 11px; color: #555; }
+    .date-item.active .wd { color: #6f8fcf; }
     .main { flex: 1; max-width: 1120px; padding: 24px 24px 60px; }
     header {
-      padding: 32px 0 20px; border-bottom: 1px solid #222;
-      margin-bottom: 24px;
+      padding: 32px 0 20px; border-bottom: 1px solid #222; margin-bottom: 24px;
     }
     header h1 { font-size: 28px; font-weight: 700; color: #fff; letter-spacing: -0.5px; }
     header p { margin-top: 8px; color: #666; font-size: 13px; line-height: 1.6; }
+    .view-section { display: none; }
+    .view-section.active-view { display: block; }
     .summary-panel {
-      background: linear-gradient(180deg, #121212, #0f0f0f);
-      border: 1px solid #1d1d1d;
-      border-radius: 16px;
-      padding: 18px;
-      margin-bottom: 22px;
+      background: linear-gradient(180deg, #121212, #0f0f0f); border: 1px solid #1d1d1d;
+      border-radius: 16px; padding: 18px; margin-bottom: 22px;
     }
-    .summary-grid {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-    }
+    .summary-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
     .summary-item {
-      background: #111;
-      border: 1px solid #1a1a1a;
-      border-radius: 12px;
-      padding: 14px;
+      background: #111; border: 1px solid #1a1a1a; border-radius: 12px; padding: 14px;
     }
     .summary-label { font-size: 12px; color: #666; margin-bottom: 6px; }
     .summary-value { font-size: 22px; font-weight: 700; color: #fff; }
     .feature-section { margin-bottom: 28px; }
     .feature-header, .day-header {
       display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 14px; padding-bottom: 8px;
-      border-bottom: 1px solid #1a1a1a;
+      margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid #1a1a1a;
     }
     .feature-header h2, .day-header h2 { font-size: 19px; font-weight: 700; color: #f0f0f0; }
     .feature-header p { margin-top: 5px; font-size: 12px; color: #666; }
@@ -75,55 +70,43 @@
     .wd-label { font-size: 14px; color: #555; font-weight: 400; margin-left: 6px; }
     .cards { display: flex; flex-direction: column; gap: 10px; }
     .card {
-      display: flex; align-items: stretch; gap: 14px;
-      padding: 14px; background: #111;
-      border-radius: 12px; transition: background 0.2s, transform 0.15s;
-      border: 1px solid #151515;
+      display: flex; align-items: stretch; gap: 14px; padding: 14px; background: #111;
+      border-radius: 12px; transition: background 0.2s, transform 0.15s; border: 1px solid #151515;
     }
     .card:hover { background: #181818; transform: translateY(-1px); }
     .card.top3 { border-left: 3px solid #1769ff; }
     .rank {
-      font-size: 18px; min-width: 32px;
-      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; min-width: 32px; display: flex; align-items: center; justify-content: center;
       color: #444; font-weight: 700;
     }
     .card.top3 .rank { font-size: 22px; }
     .cover-wrap {
-      width: 140px; min-width: 140px; height: 100px;
-      border-radius: 8px; overflow: hidden;
+      width: 140px; min-width: 140px; height: 100px; border-radius: 8px; overflow: hidden;
       background: #1a1a1a; flex-shrink: 0;
     }
     .cover-wrap img, .library-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
     .title {
-      font-size: 14px; font-weight: 600; color: #e8e8e8;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      font-size: 14px; font-weight: 600; color: #e8e8e8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
     .title a, .library-title a { color: #e8e8e8; text-decoration: none; }
     .title a:hover, .library-title a:hover { color: #1769ff; }
     .tags, .library-tags { display: flex; gap: 5px; flex-wrap: wrap; }
     .tag {
-      font-size: 11px; padding: 2px 7px;
-      border-radius: 999px; font-weight: 500;
+      font-size: 11px; padding: 2px 7px; border-radius: 999px; font-weight: 500;
     }
     .tag.industry { background: #1a2a1a; color: #6fcf6f; }
     .tag.medium { background: #1a1a2a; color: #6f8fcf; }
     .tag.trend { background: #2a1d12; color: #f6b26b; }
     .brief, .library-brief {
-      font-size: 12px; color: #888; line-height: 1.45;
-      display: -webkit-box; -webkit-line-clamp: 2;
+      font-size: 12px; color: #888; line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 2;
       -webkit-box-orient: vertical; overflow: hidden;
     }
     .meta, .library-meta { font-size: 11px; color: #666; line-height: 1.5; }
-    .stats {
-      font-size: 11px; color: #555;
-      display: flex; gap: 12px; margin-top: auto;
-    }
+    .stats { font-size: 11px; color: #555; display: flex; gap: 12px; margin-top: auto; }
     .appreciations { color: #e8556d; }
     .views { color: #777; }
-    .library-toolbar {
-      display: flex; align-items: flex-start; gap: 14px; margin-bottom: 16px; flex-wrap: wrap;
-    }
+    .library-toolbar { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 16px; flex-wrap: wrap; }
     .filter-title { font-size: 12px; color: #666; padding-top: 6px; }
     .filter-chips { display: flex; flex-wrap: wrap; gap: 8px; }
     .filter-chip {
@@ -132,9 +115,7 @@
     }
     .filter-chip:hover { border-color: #3d3d3d; color: #fff; }
     .filter-chip.active { background: #1769ff; border-color: #1769ff; color: #fff; }
-    .library-grid {
-      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px;
-    }
+    .library-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
     .library-card {
       background: #111; border: 1px solid #171717; border-radius: 14px; overflow: hidden;
       display: flex; flex-direction: column; min-height: 100%;
@@ -142,15 +123,14 @@
     .library-cover { aspect-ratio: 16 / 10; background: #1a1a1a; }
     .library-body { padding: 12px; display: flex; flex-direction: column; gap: 8px; }
     .library-title { font-size: 14px; font-weight: 600; line-height: 1.4; min-height: 40px; }
-    .history-wrap { margin-top: 34px; padding-top: 8px; border-top: 1px solid #161616; }
+    .history-wrap { margin-top: 8px; }
     .history-title { font-size: 16px; color: #888; margin-bottom: 16px; }
     .empty { text-align: center; padding: 60px 20px; color: #555; }
     .empty.small {
       padding: 18px 14px; background: #111; border-radius: 12px; border: 1px dashed #222;
     }
     footer {
-      text-align: center; padding: 24px 0; color: #333;
-      font-size: 11px; border-top: 1px solid #141414; margin-top: 40px;
+      text-align: center; padding: 24px 0; color: #333; font-size: 11px; border-top: 1px solid #141414; margin-top: 40px;
     }
     @media (max-width: 980px) {
       .library-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -158,14 +138,10 @@
     @media (max-width: 768px) {
       .layout { flex-direction: column; }
       .sidebar {
-        width: 100%; min-width: 100%; height: auto;
-        position: relative; border-right: none; border-bottom: 1px solid #1a1a1a;
-        display: flex; flex-wrap: nowrap; overflow-x: auto; padding: 12px 8px; gap: 4px;
+        width: 100%; min-width: 100%; height: auto; position: relative; border-right: none;
+        border-bottom: 1px solid #1a1a1a; padding: 12px 8px; overflow-x: auto;
       }
-      .sidebar-title { display: none; }
-      .date-btn { flex-shrink: 0; padding: 8px 12px; border-radius: 6px; white-space: nowrap; }
-      .date-btn .wd { display: none; }
-      .date-btn.active { border-left: none; border-bottom: 2px solid #1769ff; }
+      .sidebar-section-title { display: none; }
       .main { padding: 16px 12px 40px; }
       header h1 { font-size: 22px; }
       .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -180,43 +156,50 @@
 <body>
   <div class="layout">
     <nav class="sidebar">
-      <div class="sidebar-title">📅 历史榜单</div>
-      <button class="date-btn active" data-date="2026-04-03" onclick="showDay('2026-04-03')">2026-04-03<span class="wd">周五</span></button>
-        <button class="date-btn " data-date="2026-04-02" onclick="showDay('2026-04-02')">2026-04-02<span class="wd">周四</span></button>
-        <button class="date-btn " data-date="2026-04-01" onclick="showDay('2026-04-01')">2026-04-01<span class="wd">周三</span></button>
-        <button class="date-btn " data-date="2026-03-31" onclick="showDay('2026-03-31')">2026-03-31<span class="wd">周二</span></button>
-        <button class="date-btn " data-date="2026-03-30" onclick="showDay('2026-03-30')">2026-03-30<span class="wd">周一</span></button>
-        <button class="date-btn " data-date="2026-03-27" onclick="showDay('2026-03-27')">2026-03-27<span class="wd">周五</span></button>
-        <button class="date-btn " data-date="2026-03-26" onclick="showDay('2026-03-26')">2026-03-26<span class="wd">周四</span></button>
+      <div class="sidebar-section-title">NAVIGATION</div>
+      <button class="nav-link active" data-view="trends" onclick="showView('trends', this)">📈 趋势看板</button>
+      <button class="nav-link" data-view="library" onclick="showView('library', this)">🗂️ 本周案例库</button>
+      <div class="history-group" id="history-group">
+        <button class="history-toggle" onclick="toggleHistory()">🗓️ 历史榜单</button>
+        <div class="history-list">
+            <button class="date-item active" data-date="2026-04-03" onclick="showDay('2026-04-03')">2026-04-03<span class="wd">周五</span></button>
+            <button class="date-item " data-date="2026-04-02" onclick="showDay('2026-04-02')">2026-04-02<span class="wd">周四</span></button>
+            <button class="date-item " data-date="2026-04-01" onclick="showDay('2026-04-01')">2026-04-01<span class="wd">周三</span></button>
+            <button class="date-item " data-date="2026-03-31" onclick="showDay('2026-03-31')">2026-03-31<span class="wd">周二</span></button>
+            <button class="date-item " data-date="2026-03-30" onclick="showDay('2026-03-30')">2026-03-30<span class="wd">周一</span></button>
+            <button class="date-item " data-date="2026-03-27" onclick="showDay('2026-03-27')">2026-03-27<span class="wd">周五</span></button>
+            <button class="date-item " data-date="2026-03-26" onclick="showDay('2026-03-26')">2026-03-26<span class="wd">周四</span></button>
+        </div>
+      </div>
     </nav>
     <div class="main">
       <header>
         <h1>🎨 Behance Weekly Trend Board 🔷</h1>
-        <p>基于最近一周抓取结果重新整理：把重复项目从“噪音”转成“持续热度”信号；同时新增本周案例库，聚合全部去重案例并支持按行业筛选。</p>
+        <p>案例库已提升为侧栏一级入口；历史榜单改为可展开日期列表。现在更适合一边看趋势，一边快速切到去重后的本周案例池。</p>
       </header>
       
-        <section class="summary-panel">
-          <div class="summary-grid">
-            <div class="summary-item">
-              <div class="summary-label">统计周期</div>
-              <div class="summary-value">近 7 天</div>
+        <section id="view-trends" class="view-section active-view">
+          <section class="summary-panel">
+            <div class="summary-grid">
+              <div class="summary-item">
+                <div class="summary-label">统计周期</div>
+                <div class="summary-value">近 7 天</div>
+              </div>
+              <div class="summary-item">
+                <div class="summary-label">去重后项目</div>
+                <div class="summary-value">26</div>
+              </div>
+              <div class="summary-item">
+                <div class="summary-label">今日新上榜</div>
+                <div class="summary-value">2</div>
+              </div>
+              <div class="summary-item">
+                <div class="summary-label">持续热门</div>
+                <div class="summary-value">8</div>
+              </div>
             </div>
-            <div class="summary-item">
-              <div class="summary-label">去重后项目</div>
-              <div class="summary-value">26</div>
-            </div>
-            <div class="summary-item">
-              <div class="summary-label">今日新上榜</div>
-              <div class="summary-value">2</div>
-            </div>
-            <div class="summary-item">
-              <div class="summary-label">持续热门</div>
-              <div class="summary-value">8</div>
-            </div>
-          </div>
-        </section>
-
-        
+          </section>
+          
         <section class="feature-section">
           <div class="feature-header">
             <div>
@@ -265,8 +248,7 @@
           </div>
           </div>
         </section>
-
-        
+          
         <section class="feature-section">
           <div class="feature-header">
             <div>
@@ -429,18 +411,20 @@
           </div>
           </div>
         </section>
-
-        <section class="feature-section" id="weekly-library">
-          <div class="feature-header">
-            <div>
-              <h2>本周案例库</h2>
-              <p>聚合最近一周收录的全部去重案例，不按热度排序，适合横向翻找灵感。</p>
+        </section>
+      
+        <section id="view-library" class="view-section">
+          <section class="feature-section">
+            <div class="feature-header">
+              <div>
+                <h2>本周案例库</h2>
+                <p>聚合最近一周收录的全部去重案例，不按热度排序，适合横向翻找灵感。</p>
+              </div>
+              <span class="feature-count">26 项</span>
             </div>
-            <span class="feature-count">26 项</span>
-          </div>
-          <div class="library-toolbar">
-            <div class="filter-title">按行业筛选</div>
-            <div class="filter-chips">
+            <div class="library-toolbar">
+              <div class="filter-title">按行业筛选</div>
+              <div class="filter-chips">
                 <button class="filter-chip active" data-industry="全部行业" onclick="filterLibrary('全部行业', this)">全部行业</button>
                 <button class="filter-chip " data-industry="餐饮" onclick="filterLibrary('餐饮', this)">餐饮</button>
                 <button class="filter-chip " data-industry="餐饮/茶饮" onclick="filterLibrary('餐饮/茶饮', this)">餐饮/茶饮</button>
@@ -455,9 +439,9 @@
                 <button class="filter-chip " data-industry="文化艺术" onclick="filterLibrary('文化艺术', this)">文化艺术</button>
                 <button class="filter-chip " data-industry="医疗健康" onclick="filterLibrary('医疗健康', this)">医疗健康</button>
                 <button class="filter-chip " data-industry="珠宝/奢侈品" onclick="filterLibrary('珠宝/奢侈品', this)">珠宝/奢侈品</button>
+              </div>
             </div>
-          </div>
-          <div class="library-grid" id="library-grid">
+            <div class="library-grid" id="library-grid">
           <article class="library-card" data-industry="科技/消费电子" data-title="Samsung Weather App">
             <div class="library-cover"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/ab1234234120000.Y3JvcCwxMjAwLDkzOCwwLDA.jpg" alt="Samsung Weather App" loading="lazy"></div>
             <div class="library-body">
@@ -717,18 +701,19 @@
               <div class="library-meta">首次收录 2026-04-03 · 最近出现 2026-04-03</div>
             </div>
           </article>
-          </div>
+            </div>
+          </section>
         </section>
-      
-      <div class="history-wrap">
-        <div class="history-title">历史每日榜单</div>
-        
-        <section class="day" id="day-2026-04-03" >
-          <div class="day-header">
-            <h2>2026-04-03 <span class="wd-label">周五</span></h2>
-            <span class="day-count">10 个作品</span>
-          </div>
-          <div class="cards">
+      <section id="view-history" class="view-section">
+        <div class="history-wrap">
+          <div class="history-title">历史每日榜单</div>
+          
+          <section class="day" id="day-2026-04-03" >
+            <div class="day-header">
+              <h2>2026-04-03 <span class="wd-label">周五</span></h2>
+              <span class="day-count">10 个作品</span>
+            </div>
+            <div class="cards">
           <div class="card ">
             <div class="rank">1</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/4cd0d9220534229.Y3JvcCwyNDI0LDE4OTYsMCww.png" alt="Graphic Design - Portfolio" loading="lazy"></div>
@@ -918,15 +903,15 @@
               </div>
             </div>
           </div>
-          </div>
-        </section>
+            </div>
+          </section>
 
-        <section class="day" id="day-2026-04-02" style="display:none">
-          <div class="day-header">
-            <h2>2026-04-02 <span class="wd-label">周四</span></h2>
-            <span class="day-count">10 个作品</span>
-          </div>
-          <div class="cards">
+          <section class="day" id="day-2026-04-02" style="display:none">
+            <div class="day-header">
+              <h2>2026-04-02 <span class="wd-label">周四</span></h2>
+              <span class="day-count">10 个作品</span>
+            </div>
+            <div class="cards">
           <div class="card ">
             <div class="rank">1</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/f3afc8244803829.Y3JvcCw4MDgsNjMyLDAsMA.png" alt="PORTFOLIO 2026 - GRAPHIC DESIGNER &amp; ILLUSTRATOR" loading="lazy"></div>
@@ -1116,15 +1101,15 @@
               </div>
             </div>
           </div>
-          </div>
-        </section>
+            </div>
+          </section>
 
-        <section class="day" id="day-2026-04-01" style="display:none">
-          <div class="day-header">
-            <h2>2026-04-01 <span class="wd-label">周三</span></h2>
-            <span class="day-count">10 个作品</span>
-          </div>
-          <div class="cards">
+          <section class="day" id="day-2026-04-01" style="display:none">
+            <div class="day-header">
+              <h2>2026-04-01 <span class="wd-label">周三</span></h2>
+              <span class="day-count">10 个作品</span>
+            </div>
+            <div class="cards">
           <div class="card ">
             <div class="rank">1</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/4cd0d9220534229.Y3JvcCwyNDI0LDE4OTYsMCww.png" alt="Graphic Design - Portfolio" loading="lazy"></div>
@@ -1314,15 +1299,15 @@
               </div>
             </div>
           </div>
-          </div>
-        </section>
+            </div>
+          </section>
 
-        <section class="day" id="day-2026-03-31" style="display:none">
-          <div class="day-header">
-            <h2>2026-03-31 <span class="wd-label">周二</span></h2>
-            <span class="day-count">10 个作品</span>
-          </div>
-          <div class="cards">
+          <section class="day" id="day-2026-03-31" style="display:none">
+            <div class="day-header">
+              <h2>2026-03-31 <span class="wd-label">周二</span></h2>
+              <span class="day-count">10 个作品</span>
+            </div>
+            <div class="cards">
           <div class="card ">
             <div class="rank">1</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/4cd0d9220534229.Y3JvcCwyNDI0LDE4OTYsMCww.png" alt="Graphic Design - Portfolio" loading="lazy"></div>
@@ -1512,15 +1497,15 @@
               </div>
             </div>
           </div>
-          </div>
-        </section>
+            </div>
+          </section>
 
-        <section class="day" id="day-2026-03-30" style="display:none">
-          <div class="day-header">
-            <h2>2026-03-30 <span class="wd-label">周一</span></h2>
-            <span class="day-count">10 个作品</span>
-          </div>
-          <div class="cards">
+          <section class="day" id="day-2026-03-30" style="display:none">
+            <div class="day-header">
+              <h2>2026-03-30 <span class="wd-label">周一</span></h2>
+              <span class="day-count">10 个作品</span>
+            </div>
+            <div class="cards">
           <div class="card ">
             <div class="rank">1</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/311e61223625807.Y3JvcCwzMzk1LDI2NTUsMzE5LDIwNjc.jpg" alt="Call Me Latter" loading="lazy"></div>
@@ -1710,15 +1695,15 @@
               </div>
             </div>
           </div>
-          </div>
-        </section>
+            </div>
+          </section>
 
-        <section class="day" id="day-2026-03-27" style="display:none">
-          <div class="day-header">
-            <h2>2026-03-27 <span class="wd-label">周五</span></h2>
-            <span class="day-count">10 个作品</span>
-          </div>
-          <div class="cards">
+          <section class="day" id="day-2026-03-27" style="display:none">
+            <div class="day-header">
+              <h2>2026-03-27 <span class="wd-label">周五</span></h2>
+              <span class="day-count">10 个作品</span>
+            </div>
+            <div class="cards">
           <div class="card ">
             <div class="rank">1</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/311e61223625807.Y3JvcCwzMzk1LDI2NTUsMzE5LDIwNjc.jpg" alt="Call Me Latter" loading="lazy"></div>
@@ -1908,15 +1893,15 @@
               </div>
             </div>
           </div>
-          </div>
-        </section>
+            </div>
+          </section>
 
-        <section class="day" id="day-2026-03-26" style="display:none">
-          <div class="day-header">
-            <h2>2026-03-26 <span class="wd-label">周四</span></h2>
-            <span class="day-count">3 个作品</span>
-          </div>
-          <div class="cards">
+          <section class="day" id="day-2026-03-26" style="display:none">
+            <div class="day-header">
+              <h2>2026-03-26 <span class="wd-label">周四</span></h2>
+              <span class="day-count">3 个作品</span>
+            </div>
+            <div class="cards">
           <div class="card ">
             <div class="rank">1</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/c7a1f3233647177.Y3JvcCwxMjAwLDkzOCwwLDA.jpg" alt="VOOO" loading="lazy"></div>
@@ -1973,22 +1958,39 @@
               </div>
             </div>
           </div>
-          </div>
-        </section>
-      </div>
+            </div>
+          </section>
+        </div>
+      </section>
       <footer>Powered by AOI 🔷 · 数据来源: Behance</footer>
     </div>
   </div>
   <script>
+    function showView(view, el) {
+      document.querySelectorAll('.view-section').forEach(section => section.classList.remove('active-view'));
+      document.querySelectorAll('.nav-link, .date-item').forEach(btn => btn.classList.remove('active'));
+      if (view === 'trends') {
+        document.getElementById('view-trends').classList.add('active-view');
+      } else if (view === 'library') {
+        document.getElementById('view-library').classList.add('active-view');
+      } else if (view === 'history') {
+        document.getElementById('view-history').classList.add('active-view');
+      }
+      if (el) el.classList.add('active');
+    }
+
+    function toggleHistory() {
+      document.getElementById('history-group').classList.toggle('collapsed');
+    }
+
     function showDay(date) {
+      showView('history');
       document.querySelectorAll('.day').forEach(el => el.style.display = 'none');
-      document.querySelectorAll('.date-btn').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-link, .date-item').forEach(btn => btn.classList.remove('active'));
       const target = document.getElementById('day-' + date);
       if (target) target.style.display = '';
-      const btn = document.querySelector('.date-btn[data-date="' + date + '"]');
+      const btn = document.querySelector('.date-item[data-date="' + date + '"]');
       if (btn) btn.classList.add('active');
-      const wrap = document.querySelector('.history-wrap');
-      if (wrap) wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     function filterLibrary(industry, el) {
@@ -1999,6 +2001,8 @@
         card.style.display = (industry === '全部行业' || val === industry) ? '' : 'none';
       });
     }
+
+    document.getElementById('history-group').classList.add('collapsed');
   </script>
 </body>
 </html>
