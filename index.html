@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🎨Behance Daily Creative Picks🔷</title>
+  <title>🎨 Behance Weekly Trend Board 🔷</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext y='52' font-size='52'%3E%F0%9F%8E%A8%3C/text%3E%3C/svg%3E">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -12,8 +12,6 @@
       background: #0a0a0a; color: #e0e0e0; min-height: 100vh;
     }
     .layout { display: flex; min-height: 100vh; }
-
-    /* Sidebar */
     .sidebar {
       width: 200px; min-width: 200px;
       background: #0e0e0e; border-right: 1px solid #1a1a1a;
@@ -38,31 +36,49 @@
     }
     .date-btn .wd { font-size: 11px; color: #555; }
     .date-btn.active .wd { color: #6f8fcf; }
-
-    /* Main content */
-    .main { flex: 1; max-width: 780px; padding: 24px 24px 60px; }
+    .main { flex: 1; max-width: 920px; padding: 24px 24px 60px; }
     header {
-      padding: 32px 0 24px; border-bottom: 1px solid #222;
+      padding: 32px 0 20px; border-bottom: 1px solid #222;
       margin-bottom: 24px;
     }
-    header h1 { font-size: 26px; font-weight: 700; color: #fff; letter-spacing: -0.5px; }
-    header h1 span { color: #1769ff; }
-    header p { margin-top: 6px; color: #666; font-size: 13px; }
-
-    .day-header {
+    header h1 { font-size: 28px; font-weight: 700; color: #fff; letter-spacing: -0.5px; }
+    header p { margin-top: 8px; color: #666; font-size: 13px; line-height: 1.6; }
+    .summary-panel {
+      background: linear-gradient(180deg, #121212, #0f0f0f);
+      border: 1px solid #1d1d1d;
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 22px;
+    }
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .summary-item {
+      background: #111;
+      border: 1px solid #1a1a1a;
+      border-radius: 12px;
+      padding: 14px;
+    }
+    .summary-label { font-size: 12px; color: #666; margin-bottom: 6px; }
+    .summary-value { font-size: 22px; font-weight: 700; color: #fff; }
+    .feature-section { margin-bottom: 28px; }
+    .feature-header, .day-header {
       display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 16px; padding-bottom: 8px;
+      margin-bottom: 14px; padding-bottom: 8px;
       border-bottom: 1px solid #1a1a1a;
     }
-    .day-header h2 { font-size: 18px; font-weight: 600; color: #ccc; }
+    .feature-header h2, .day-header h2 { font-size: 19px; font-weight: 700; color: #f0f0f0; }
+    .feature-header p { margin-top: 5px; font-size: 12px; color: #666; }
+    .feature-count, .day-count { font-size: 12px; color: #666; }
     .wd-label { font-size: 14px; color: #555; font-weight: 400; margin-left: 6px; }
-    .day-count { font-size: 12px; color: #555; }
-
     .cards { display: flex; flex-direction: column; gap: 10px; }
     .card {
       display: flex; align-items: stretch; gap: 14px;
       padding: 14px; background: #111;
       border-radius: 12px; transition: background 0.2s, transform 0.15s;
+      border: 1px solid #151515;
     }
     .card:hover { background: #181818; transform: translateY(-1px); }
     .card.top3 { border-left: 3px solid #1769ff; }
@@ -78,7 +94,7 @@
       background: #1a1a1a; flex-shrink: 0;
     }
     .cover-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+    .info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
     .title {
       font-size: 14px; font-weight: 600; color: #e8e8e8;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
@@ -88,50 +104,51 @@
     .tags { display: flex; gap: 5px; flex-wrap: wrap; }
     .tag {
       font-size: 11px; padding: 2px 7px;
-      border-radius: 4px; font-weight: 500;
+      border-radius: 999px; font-weight: 500;
     }
     .tag.industry { background: #1a2a1a; color: #6fcf6f; }
     .tag.medium { background: #1a1a2a; color: #6f8fcf; }
+    .tag.trend { background: #2a1d12; color: #f6b26b; }
     .brief {
-      font-size: 12px; color: #888; line-height: 1.4;
+      font-size: 12px; color: #888; line-height: 1.45;
       display: -webkit-box; -webkit-line-clamp: 2;
       -webkit-box-orient: vertical; overflow: hidden;
     }
+    .meta { font-size: 11px; color: #666; line-height: 1.5; }
     .stats {
       font-size: 11px; color: #555;
       display: flex; gap: 12px; margin-top: auto;
     }
     .appreciations { color: #e8556d; }
     .views { color: #777; }
-
+    .history-wrap { margin-top: 34px; padding-top: 8px; border-top: 1px solid #161616; }
+    .history-title { font-size: 16px; color: #888; margin-bottom: 16px; }
     .empty { text-align: center; padding: 60px 20px; color: #555; }
+    .empty.small {
+      padding: 18px 14px; background: #111; border-radius: 12px; border: 1px dashed #222;
+    }
     footer {
       text-align: center; padding: 24px 0; color: #333;
       font-size: 11px; border-top: 1px solid #141414; margin-top: 40px;
     }
-
-    /* Mobile */
     @media (max-width: 768px) {
       .layout { flex-direction: column; }
       .sidebar {
         width: 100%; min-width: 100%; height: auto;
-        position: relative; border-right: none;
-        border-bottom: 1px solid #1a1a1a;
-        display: flex; flex-wrap: nowrap; overflow-x: auto;
-        padding: 12px 8px; gap: 4px;
+        position: relative; border-right: none; border-bottom: 1px solid #1a1a1a;
+        display: flex; flex-wrap: nowrap; overflow-x: auto; padding: 12px 8px; gap: 4px;
       }
       .sidebar-title { display: none; }
-      .date-btn {
-        flex-shrink: 0; padding: 8px 12px;
-        border-radius: 6px; white-space: nowrap;
-      }
+      .date-btn { flex-shrink: 0; padding: 8px 12px; border-radius: 6px; white-space: nowrap; }
       .date-btn .wd { display: none; }
       .date-btn.active { border-left: none; border-bottom: 2px solid #1769ff; }
       .main { padding: 16px 12px 40px; }
-      header h1 { font-size: 20px; }
+      header h1 { font-size: 22px; }
+      .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .card { padding: 10px; gap: 10px; }
       .cover-wrap { width: 100px; min-width: 100px; height: 72px; }
       .title { font-size: 13px; }
+      .feature-header, .day-header { align-items: flex-start; flex-direction: column; gap: 6px; }
     }
   </style>
 </head>
@@ -149,46 +166,125 @@
     </nav>
     <div class="main">
       <header>
-        <h1>🎨Behance Daily Creative Picks🔷</h1>
-        <p>自动抓取 Behance 本周热门作品 · 含行业分类、媒介类型与简介 · 每日 09:30 更新</p>
+        <h1>🎨 Behance Weekly Trend Board 🔷</h1>
+        <p>基于最近一周抓取结果重新整理：把重复项目从“噪音”转成“持续热度”信号。首页优先看今日新增热点与持续热门，历史日榜仍可回溯查看。</p>
       </header>
       
-        <section class="day" id="day-2026-04-03" >
-          <div class="day-header">
-            <h2>2026-04-03 <span class="wd-label">周五</span></h2>
-            <span class="day-count">10 个作品</span>
+        <section class="summary-panel">
+          <div class="summary-grid">
+            <div class="summary-item">
+              <div class="summary-label">统计周期</div>
+              <div class="summary-value">近 7 天</div>
+            </div>
+            <div class="summary-item">
+              <div class="summary-label">去重后项目</div>
+              <div class="summary-value">26</div>
+            </div>
+            <div class="summary-item">
+              <div class="summary-label">今日新上榜</div>
+              <div class="summary-value">2</div>
+            </div>
+            <div class="summary-item">
+              <div class="summary-label">持续热门</div>
+              <div class="summary-value">8</div>
+            </div>
+          </div>
+        </section>
+
+        
+        <section class="feature-section">
+          <div class="feature-header">
+            <div>
+              <h2>今日新上榜</h2>
+              <p>今天出现，且过去一周未重复出现的项目。</p>
+            </div>
+            <span class="feature-count">2 项</span>
           </div>
           <div class="cards">
           <div class="card top3">
             <div class="rank">🥇</div>
-            <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/4cd0d9220534229.Y3JvcCwyNDI0LDE4OTYsMCww.png" alt="Graphic Design - Portfolio" loading="lazy"></div>
+            <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/68f10a221379385.Y3JvcCw1MDUwLDM5NTAsMCww.jpg" alt="CASA MADRE - Heritage Pantry" loading="lazy"></div>
             <div class="info">
-              <div class="title"><a href="https://www.behance.net/gallery/220534229/Graphic-Design-Portfolio" target="_blank">Graphic Design - Portfolio</a></div>
+              <div class="title"><a href="https://www.behance.net/gallery/221379385/CASA-MADRE-Heritage-Pantry" target="_blank">CASA MADRE - Heritage Pantry</a></div>
               <div class="tags">
-                <span class="tag industry">设计服务</span>
-                <span class="tag medium">平面设计/作品集</span>
+                <span class="tag industry">餐饮</span>
+                <span class="tag medium">品牌VI</span>
+                <span class="tag trend">今日新上榜</span>
               </div>
-              <div class="brief">个人平面设计作品集展示</div>
+              <div class="brief">传统食品品牌视觉形象设计</div>
+              <div class="meta">首次 2026-04-03 · 最近 2026-04-03 ｜ 出现日：2026-04-03</div>
               <div class="stats">
-                <span class="appreciations">❤️ 16,240</span>
-                <span class="views">👁️ 525,730</span>
+                <span class="appreciations">❤️ 633</span>
+                <span class="views">👁️ 6,148</span>
               </div>
             </div>
           </div>
 
           <div class="card top3">
             <div class="rank">🥈</div>
+            <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/8a6a55246683387.Y3JvcCwyNzk5LDIxOTAsMCww.jpg" alt="Sandisk - Packaging Design &amp; 3D Renderings" loading="lazy"></div>
+            <div class="info">
+              <div class="title"><a href="https://www.behance.net/gallery/246683387/Sandisk-Packaging-Design-3D-Renderings" target="_blank">Sandisk - Packaging Design &amp; 3D Renderings</a></div>
+              <div class="tags">
+                <span class="tag industry">科技</span>
+                <span class="tag medium">包装设计</span>
+                <span class="tag trend">今日新上榜</span>
+              </div>
+              <div class="brief">存储设备包装及3D效果呈现</div>
+              <div class="meta">首次 2026-04-03 · 最近 2026-04-03 ｜ 出现日：2026-04-03</div>
+              <div class="stats">
+                <span class="appreciations">❤️ 557</span>
+                <span class="views">👁️ 3,585</span>
+              </div>
+            </div>
+          </div>
+          </div>
+        </section>
+
+        
+        <section class="feature-section">
+          <div class="feature-header">
+            <div>
+              <h2>持续热门</h2>
+              <p>今天仍在榜，且过去一周重复出现的项目。重复不再平铺，而是转为趋势信号。</p>
+            </div>
+            <span class="feature-count">8 项</span>
+          </div>
+          <div class="cards">
+          <div class="card top3">
+            <div class="rank">🥇</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/f3afc8244803829.Y3JvcCw4MDgsNjMyLDAsMA.png" alt="PORTFOLIO 2026 - GRAPHIC DESIGNER &amp; ILLUSTRATOR" loading="lazy"></div>
             <div class="info">
               <div class="title"><a href="https://www.behance.net/gallery/244803829/PORTFOLIO-2026-GRAPHIC-DESIGNER-ILLUSTRATOR" target="_blank">PORTFOLIO 2026 - GRAPHIC DESIGNER &amp; ILLUSTRATOR</a></div>
               <div class="tags">
                 <span class="tag industry">设计服务</span>
                 <span class="tag medium">品牌VI</span>
+                <span class="tag trend">近7天出现 6 次</span>
               </div>
               <div class="brief">平面设计师与插画师个人品牌形象</div>
+              <div class="meta">首次 2026-03-27 · 最近 2026-04-03 ｜ 出现日：2026-03-27 / 2026-03-30 / 2026-03-31 / 2026-04-01 / 2026-04-02 / 2026-04-03</div>
               <div class="stats">
                 <span class="appreciations">❤️ 2,761</span>
                 <span class="views">👁️ 35,935</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card top3">
+            <div class="rank">🥈</div>
+            <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/4cd0d9220534229.Y3JvcCwyNDI0LDE4OTYsMCww.png" alt="Graphic Design - Portfolio" loading="lazy"></div>
+            <div class="info">
+              <div class="title"><a href="https://www.behance.net/gallery/220534229/Graphic-Design-Portfolio" target="_blank">Graphic Design - Portfolio</a></div>
+              <div class="tags">
+                <span class="tag industry">设计服务</span>
+                <span class="tag medium">平面设计/作品集</span>
+                <span class="tag trend">近7天出现 3 次</span>
+              </div>
+              <div class="brief">个人平面设计作品集展示</div>
+              <div class="meta">首次 2026-03-31 · 最近 2026-04-03 ｜ 出现日：2026-03-31 / 2026-04-01 / 2026-04-03</div>
+              <div class="stats">
+                <span class="appreciations">❤️ 16,240</span>
+                <span class="views">👁️ 525,730</span>
               </div>
             </div>
           </div>
@@ -201,8 +297,10 @@
               <div class="tags">
                 <span class="tag industry">餐饮</span>
                 <span class="tag medium">品牌VI</span>
+                <span class="tag trend">近7天出现 3 次</span>
               </div>
               <div class="brief">希腊餐厅品牌视觉识别设计</div>
+              <div class="meta">首次 2026-04-01 · 最近 2026-04-03 ｜ 出现日：2026-04-01 / 2026-04-02 / 2026-04-03</div>
               <div class="stats">
                 <span class="appreciations">❤️ 1,360</span>
                 <span class="views">👁️ 10,163</span>
@@ -218,8 +316,10 @@
               <div class="tags">
                 <span class="tag industry">餐饮</span>
                 <span class="tag medium">包装设计</span>
+                <span class="tag trend">近7天出现 2 次</span>
               </div>
               <div class="brief">咖啡品牌包装与视觉系统设计</div>
+              <div class="meta">首次 2026-04-02 · 最近 2026-04-03 ｜ 出现日：2026-04-02 / 2026-04-03</div>
               <div class="stats">
                 <span class="appreciations">❤️ 1,062</span>
                 <span class="views">👁️ 6,855</span>
@@ -235,8 +335,10 @@
               <div class="tags">
                 <span class="tag industry">餐饮</span>
                 <span class="tag medium">品牌VI</span>
+                <span class="tag trend">近7天出现 2 次</span>
               </div>
               <div class="brief">咖啡品牌视觉识别与标志设计</div>
+              <div class="meta">首次 2026-04-02 · 最近 2026-04-03 ｜ 出现日：2026-04-02 / 2026-04-03</div>
               <div class="stats">
                 <span class="appreciations">❤️ 991</span>
                 <span class="views">👁️ 8,333</span>
@@ -252,8 +354,10 @@
               <div class="tags">
                 <span class="tag industry">设计服务</span>
                 <span class="tag medium">品牌VI</span>
+                <span class="tag trend">近7天出现 2 次</span>
               </div>
               <div class="brief">品牌视觉形象与识别系统设计</div>
+              <div class="meta">首次 2026-04-02 · 最近 2026-04-03 ｜ 出现日：2026-04-02 / 2026-04-03</div>
               <div class="stats">
                 <span class="appreciations">❤️ 788</span>
                 <span class="views">👁️ 7,243</span>
@@ -269,8 +373,173 @@
               <div class="tags">
                 <span class="tag industry">设计服务</span>
                 <span class="tag medium">品牌VI</span>
+                <span class="tag trend">近7天出现 2 次</span>
               </div>
               <div class="brief">现代品牌视觉识别系统设计</div>
+              <div class="meta">首次 2026-04-02 · 最近 2026-04-03 ｜ 出现日：2026-04-02 / 2026-04-03</div>
+              <div class="stats">
+                <span class="appreciations">❤️ 699</span>
+                <span class="views">👁️ 4,778</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card ">
+            <div class="rank">8</div>
+            <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/2977ee246185287.Y3JvcCwxNjU5LDEyOTcsMCwzMTI.png" alt="March Practices" loading="lazy"></div>
+            <div class="info">
+              <div class="title"><a href="https://www.behance.net/gallery/246185287/March-Practices" target="_blank">March Practices</a></div>
+              <div class="tags">
+                <span class="tag industry">设计服务</span>
+                <span class="tag medium">平面海报</span>
+                <span class="tag trend">近7天出现 2 次</span>
+              </div>
+              <div class="brief">平面设计项目合集展示</div>
+              <div class="meta">首次 2026-04-02 · 最近 2026-04-03 ｜ 出现日：2026-04-02 / 2026-04-03</div>
+              <div class="stats">
+                <span class="appreciations">❤️ 555</span>
+                <span class="views">👁️ 2,839</span>
+              </div>
+            </div>
+          </div>
+          </div>
+        </section>
+      
+      <div class="history-wrap">
+        <div class="history-title">历史每日榜单</div>
+        
+        <section class="day" id="day-2026-04-03" >
+          <div class="day-header">
+            <h2>2026-04-03 <span class="wd-label">周五</span></h2>
+            <span class="day-count">10 个作品</span>
+          </div>
+          <div class="cards">
+          <div class="card top3">
+            <div class="rank">1</div>
+            <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/4cd0d9220534229.Y3JvcCwyNDI0LDE4OTYsMCww.png" alt="Graphic Design - Portfolio" loading="lazy"></div>
+            <div class="info">
+              <div class="title"><a href="https://www.behance.net/gallery/220534229/Graphic-Design-Portfolio" target="_blank">Graphic Design - Portfolio</a></div>
+              <div class="tags">
+                <span class="tag industry">设计服务</span>
+                <span class="tag medium">平面设计/作品集</span>
+                
+              </div>
+              <div class="brief">个人平面设计作品集展示</div>
+              
+              <div class="stats">
+                <span class="appreciations">❤️ 16,240</span>
+                <span class="views">👁️ 525,730</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card top3">
+            <div class="rank">2</div>
+            <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/f3afc8244803829.Y3JvcCw4MDgsNjMyLDAsMA.png" alt="PORTFOLIO 2026 - GRAPHIC DESIGNER &amp; ILLUSTRATOR" loading="lazy"></div>
+            <div class="info">
+              <div class="title"><a href="https://www.behance.net/gallery/244803829/PORTFOLIO-2026-GRAPHIC-DESIGNER-ILLUSTRATOR" target="_blank">PORTFOLIO 2026 - GRAPHIC DESIGNER &amp; ILLUSTRATOR</a></div>
+              <div class="tags">
+                <span class="tag industry">设计服务</span>
+                <span class="tag medium">品牌VI</span>
+                
+              </div>
+              <div class="brief">平面设计师与插画师个人品牌形象</div>
+              
+              <div class="stats">
+                <span class="appreciations">❤️ 2,761</span>
+                <span class="views">👁️ 35,935</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card top3">
+            <div class="rank">3</div>
+            <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/a6f652229332377.Y3JvcCwxODg1LDE0NzQsMCww.jpg" alt="Emma Greek Restaurant" loading="lazy"></div>
+            <div class="info">
+              <div class="title"><a href="https://www.behance.net/gallery/229332377/Emma-Greek-Restaurant" target="_blank">Emma Greek Restaurant</a></div>
+              <div class="tags">
+                <span class="tag industry">餐饮</span>
+                <span class="tag medium">品牌VI</span>
+                
+              </div>
+              <div class="brief">希腊餐厅品牌视觉识别设计</div>
+              
+              <div class="stats">
+                <span class="appreciations">❤️ 1,360</span>
+                <span class="views">👁️ 10,163</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card ">
+            <div class="rank">4</div>
+            <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/f5dc35245683949.Y3JvcCw4MDgsNjMyLDAsMA.png" alt="Ufobean Coffee" loading="lazy"></div>
+            <div class="info">
+              <div class="title"><a href="https://www.behance.net/gallery/245683949/Ufobean-Coffee" target="_blank">Ufobean Coffee</a></div>
+              <div class="tags">
+                <span class="tag industry">餐饮</span>
+                <span class="tag medium">包装设计</span>
+                
+              </div>
+              <div class="brief">咖啡品牌包装与视觉系统设计</div>
+              
+              <div class="stats">
+                <span class="appreciations">❤️ 1,062</span>
+                <span class="views">👁️ 6,855</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card ">
+            <div class="rank">5</div>
+            <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/100ebd230349175.Y3JvcCwzMzY2LDI2MzMsMCww.jpg" alt="K-FFE" loading="lazy"></div>
+            <div class="info">
+              <div class="title"><a href="https://www.behance.net/gallery/230349175/K-FFE" target="_blank">K-FFE</a></div>
+              <div class="tags">
+                <span class="tag industry">餐饮</span>
+                <span class="tag medium">品牌VI</span>
+                
+              </div>
+              <div class="brief">咖啡品牌视觉识别与标志设计</div>
+              
+              <div class="stats">
+                <span class="appreciations">❤️ 991</span>
+                <span class="views">👁️ 8,333</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card ">
+            <div class="rank">6</div>
+            <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/a36aef229757493.Y3JvcCwxMTU1LDkwNCwwLDA.jpg" alt="SATO — Visual Identity" loading="lazy"></div>
+            <div class="info">
+              <div class="title"><a href="https://www.behance.net/gallery/229757493/SATO-Visual-Identity" target="_blank">SATO — Visual Identity</a></div>
+              <div class="tags">
+                <span class="tag industry">设计服务</span>
+                <span class="tag medium">品牌VI</span>
+                
+              </div>
+              <div class="brief">品牌视觉形象与识别系统设计</div>
+              
+              <div class="stats">
+                <span class="appreciations">❤️ 788</span>
+                <span class="views">👁️ 7,243</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card ">
+            <div class="rank">7</div>
+            <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/49daf2231345043.Y3JvcCwxNDk5LDExNzMsMCww.jpg" alt="Pace+ Visual Identity" loading="lazy"></div>
+            <div class="info">
+              <div class="title"><a href="https://www.behance.net/gallery/231345043/Pace-Visual-Identity" target="_blank">Pace+ Visual Identity</a></div>
+              <div class="tags">
+                <span class="tag industry">设计服务</span>
+                <span class="tag medium">品牌VI</span>
+                
+              </div>
+              <div class="brief">现代品牌视觉识别系统设计</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 699</span>
                 <span class="views">👁️ 4,778</span>
@@ -286,8 +555,10 @@
               <div class="tags">
                 <span class="tag industry">餐饮</span>
                 <span class="tag medium">品牌VI</span>
+                
               </div>
               <div class="brief">传统食品品牌视觉形象设计</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 633</span>
                 <span class="views">👁️ 6,148</span>
@@ -303,8 +574,10 @@
               <div class="tags">
                 <span class="tag industry">科技</span>
                 <span class="tag medium">包装设计</span>
+                
               </div>
               <div class="brief">存储设备包装及3D效果呈现</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 557</span>
                 <span class="views">👁️ 3,585</span>
@@ -320,8 +593,10 @@
               <div class="tags">
                 <span class="tag industry">设计服务</span>
                 <span class="tag medium">平面海报</span>
+                
               </div>
               <div class="brief">平面设计项目合集展示</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 555</span>
                 <span class="views">👁️ 2,839</span>
@@ -338,15 +613,17 @@
           </div>
           <div class="cards">
           <div class="card top3">
-            <div class="rank">🥇</div>
+            <div class="rank">1</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/f3afc8244803829.Y3JvcCw4MDgsNjMyLDAsMA.png" alt="PORTFOLIO 2026 - GRAPHIC DESIGNER &amp; ILLUSTRATOR" loading="lazy"></div>
             <div class="info">
               <div class="title"><a href="https://www.behance.net/gallery/244803829/PORTFOLIO-2026-GRAPHIC-DESIGNER-ILLUSTRATOR" target="_blank">PORTFOLIO 2026 - GRAPHIC DESIGNER &amp; ILLUSTRATOR</a></div>
               <div class="tags">
                 <span class="tag industry">设计服务</span>
                 <span class="tag medium">品牌VI</span>
+                
               </div>
               <div class="brief">个人作品集品牌包装与视觉展示</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 2,724</span>
                 <span class="views">👁️ 34,963</span>
@@ -355,15 +632,17 @@
           </div>
 
           <div class="card top3">
-            <div class="rank">🥈</div>
+            <div class="rank">2</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/959c53221124099.Y3JvcCw5OTUsNzc4LDIxMSwxNDc.jpg" alt="Mandrill Films" loading="lazy"></div>
             <div class="info">
               <div class="title"><a href="https://www.behance.net/gallery/221124099/Mandrill-Films" target="_blank">Mandrill Films</a></div>
               <div class="tags">
                 <span class="tag industry">文化艺术</span>
                 <span class="tag medium">品牌VI</span>
+                
               </div>
               <div class="brief">影视制作公司品牌识别系统</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 2,087</span>
                 <span class="views">👁️ 18,693</span>
@@ -372,15 +651,17 @@
           </div>
 
           <div class="card top3">
-            <div class="rank">🥉</div>
+            <div class="rank">3</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/a6f652229332377.Y3JvcCwxODg1LDE0NzQsMCww.jpg" alt="Emma Greek Restaurant" loading="lazy"></div>
             <div class="info">
               <div class="title"><a href="https://www.behance.net/gallery/229332377/Emma-Greek-Restaurant" target="_blank">Emma Greek Restaurant</a></div>
               <div class="tags">
                 <span class="tag industry">餐饮</span>
                 <span class="tag medium">品牌VI</span>
+                
               </div>
               <div class="brief">希腊餐厅品牌形象设计</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 1,319</span>
                 <span class="views">👁️ 9,880</span>
@@ -396,8 +677,10 @@
               <div class="tags">
                 <span class="tag industry">设计服务</span>
                 <span class="tag medium">品牌VI</span>
+                
               </div>
               <div class="brief">个人作品集视觉识别方案</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 1,238</span>
                 <span class="views">👁️ 27,176</span>
@@ -413,8 +696,10 @@
               <div class="tags">
                 <span class="tag industry">餐饮</span>
                 <span class="tag medium">包装设计</span>
+                
               </div>
               <div class="brief">咖啡品牌包装与视觉系统</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 985</span>
                 <span class="views">👁️ 6,330</span>
@@ -430,8 +715,10 @@
               <div class="tags">
                 <span class="tag industry">餐饮</span>
                 <span class="tag medium">品牌VI</span>
+                
               </div>
               <div class="brief">咖啡品牌命名与视觉识别</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 975</span>
                 <span class="views">👁️ 8,145</span>
@@ -447,8 +734,10 @@
               <div class="tags">
                 <span class="tag industry">美妆</span>
                 <span class="tag medium">品牌VI</span>
+                
               </div>
               <div class="brief">EGO品牌视觉识别与形象设计</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 907</span>
                 <span class="views">👁️ 5,832</span>
@@ -464,8 +753,10 @@
               <div class="tags">
                 <span class="tag industry">科技</span>
                 <span class="tag medium">品牌VI</span>
+                
               </div>
               <div class="brief">SATO品牌视觉识别系统</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 773</span>
                 <span class="views">👁️ 7,066</span>
@@ -481,8 +772,10 @@
               <div class="tags">
                 <span class="tag industry">科技</span>
                 <span class="tag medium">品牌VI</span>
+                
               </div>
               <div class="brief">Pace+品牌视觉识别系统</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 682</span>
                 <span class="views">👁️ 4,528</span>
@@ -498,8 +791,10 @@
               <div class="tags">
                 <span class="tag industry">设计服务</span>
                 <span class="tag medium">平面海报</span>
+                
               </div>
               <div class="brief">实验性视觉实践作品集</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 536</span>
                 <span class="views">👁️ 2,722</span>
@@ -516,15 +811,17 @@
           </div>
           <div class="cards">
           <div class="card top3">
-            <div class="rank">🥇</div>
+            <div class="rank">1</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/4cd0d9220534229.Y3JvcCwyNDI0LDE4OTYsMCww.png" alt="Graphic Design - Portfolio" loading="lazy"></div>
             <div class="info">
               <div class="title"><a href="https://www.behance.net/gallery/220534229/Graphic-Design-Portfolio" target="_blank">Graphic Design - Portfolio</a></div>
               <div class="tags">
                 <span class="tag industry">设计服务</span>
                 <span class="tag medium">品牌VI</span>
+                
               </div>
               <div class="brief">平面设计师作品集展示，呈现多类视觉风格</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 16,162</span>
                 <span class="views">👁️ 522,761</span>
@@ -533,15 +830,17 @@
           </div>
 
           <div class="card top3">
-            <div class="rank">🥈</div>
+            <div class="rank">2</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/311e61223625807.Y3JvcCwzMzk1LDI2NTUsMzE5LDIwNjc.jpg" alt="Call Me Latter" loading="lazy"></div>
             <div class="info">
               <div class="title"><a href="https://www.behance.net/gallery/223625807/Call-Me-Latter" target="_blank">Call Me Latter</a></div>
               <div class="tags">
                 <span class="tag industry">文化艺术</span>
                 <span class="tag medium">品牌VI</span>
+                
               </div>
               <div class="brief">以品牌形象为核心的创意识别设计</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 4,890</span>
                 <span class="views">👁️ 47,021</span>
@@ -550,15 +849,17 @@
           </div>
 
           <div class="card top3">
-            <div class="rank">🥉</div>
+            <div class="rank">3</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/7d9c69236873481.Y3JvcCwxMjEyLDk0OCwwLDA.png" alt="Spectra Eye Clinic — UX/UI" loading="lazy"></div>
             <div class="info">
               <div class="title"><a href="https://www.behance.net/gallery/236873481/Spectra-Eye-Clinic-UXUI" target="_blank">Spectra Eye Clinic — UX/UI</a></div>
               <div class="tags">
                 <span class="tag industry">医疗健康</span>
                 <span class="tag medium">UI/UX</span>
+                
               </div>
               <div class="brief">眼科诊所网站与预约体验界面设计</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 3,510</span>
                 <span class="views">👁️ 38,532</span>
@@ -574,8 +875,10 @@
               <div class="tags">
                 <span class="tag industry">设计服务</span>
                 <span class="tag medium">平面海报</span>
+                
               </div>
               <div class="brief">设计师与插画师个人作品集展示</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 2,613</span>
                 <span class="views">👁️ 33,345</span>
@@ -591,8 +894,10 @@
               <div class="tags">
                 <span class="tag industry">文化艺术</span>
                 <span class="tag medium">品牌VI</span>
+                
               </div>
               <div class="brief">影视公司品牌视觉识别系统设计</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 2,070</span>
                 <span class="views">👁️ 18,342</span>
@@ -608,8 +913,10 @@
               <div class="tags">
                 <span class="tag industry">科技</span>
                 <span class="tag medium">品牌VI</span>
+                
               </div>
               <div class="brief">品牌形象与产品界面一体化设计</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 1,715</span>
                 <span class="views">👁️ 15,647</span>
@@ -625,8 +932,10 @@
               <div class="tags">
                 <span class="tag industry">餐饮</span>
                 <span class="tag medium">品牌VI</span>
+                
               </div>
               <div class="brief">希腊餐厅品牌视觉与空间风格设计</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 1,238</span>
                 <span class="views">👁️ 9,366</span>
@@ -642,8 +951,10 @@
               <div class="tags">
                 <span class="tag industry">设计服务</span>
                 <span class="tag medium">品牌VI</span>
+                
               </div>
               <div class="brief">高对比实验性视觉识别作品</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 1,237</span>
                 <span class="views">👁️ 8,710</span>
@@ -659,8 +970,10 @@
               <div class="tags">
                 <span class="tag industry">医疗健康</span>
                 <span class="tag medium">UI/UX</span>
+                
               </div>
               <div class="brief">个人化数字平台界面与交互设计</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 1,132</span>
                 <span class="views">👁️ 7,318</span>
@@ -676,8 +989,10 @@
               <div class="tags">
                 <span class="tag industry">设计服务</span>
                 <span class="tag medium">品牌VI</span>
+                
               </div>
               <div class="brief">个人作品集品牌呈现与视觉包装</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 927</span>
                 <span class="views">👁️ 23,051</span>
@@ -694,15 +1009,17 @@
           </div>
           <div class="cards">
           <div class="card top3">
-            <div class="rank">🥇</div>
+            <div class="rank">1</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/4cd0d9220534229.Y3JvcCwyNDI0LDE4OTYsMCww.png" alt="Graphic Design - Portfolio" loading="lazy"></div>
             <div class="info">
               <div class="title"><a href="https://www.behance.net/gallery/220534229/Graphic-Design-Portfolio" target="_blank">Graphic Design - Portfolio</a></div>
               <div class="tags">
                 <span class="tag industry">设计服务</span>
                 <span class="tag medium">品牌VI</span>
+                
               </div>
               <div class="brief">个人平面设计作品集展示，涵盖多类视觉案例</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 16,115</span>
                 <span class="views">👁️ 520,979</span>
@@ -711,15 +1028,17 @@
           </div>
 
           <div class="card top3">
-            <div class="rank">🥈</div>
+            <div class="rank">2</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/311e61223625807.Y3JvcCwzMzk1LDI2NTUsMzE5LDIwNjc.jpg" alt="Call Me Latter" loading="lazy"></div>
             <div class="info">
               <div class="title"><a href="https://www.behance.net/gallery/223625807/Call-Me-Latter" target="_blank">Call Me Latter</a></div>
               <div class="tags">
                 <span class="tag industry">设计服务</span>
                 <span class="tag medium">品牌VI</span>
+                
               </div>
               <div class="brief">以品牌命名为核心的视觉识别与形象呈现</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 4,869</span>
                 <span class="views">👁️ 46,802</span>
@@ -728,15 +1047,17 @@
           </div>
 
           <div class="card top3">
-            <div class="rank">🥉</div>
+            <div class="rank">3</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/7d9c69236873481.Y3JvcCwxMjEyLDk0OCwwLDA.png" alt="Spectra Eye Clinic — UX/UI" loading="lazy"></div>
             <div class="info">
               <div class="title"><a href="https://www.behance.net/gallery/236873481/Spectra-Eye-Clinic-UXUI" target="_blank">Spectra Eye Clinic — UX/UI</a></div>
               <div class="tags">
                 <span class="tag industry">医疗健康</span>
                 <span class="tag medium">UI/UX</span>
+                
               </div>
               <div class="brief">眼科诊所预约与服务体验界面设计</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 3,462</span>
                 <span class="views">👁️ 37,922</span>
@@ -752,8 +1073,10 @@
               <div class="tags">
                 <span class="tag industry">设计服务</span>
                 <span class="tag medium">品牌VI</span>
+                
               </div>
               <div class="brief">2026平面设计师与插画师个人作品集</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 2,539</span>
                 <span class="views">👁️ 31,917</span>
@@ -769,8 +1092,10 @@
               <div class="tags">
                 <span class="tag industry">医疗健康</span>
                 <span class="tag medium">UI/UX</span>
+                
               </div>
               <div class="brief">面向老年照护的情绪与用药记录应用</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 2,236</span>
                 <span class="views">👁️ 18,617</span>
@@ -786,8 +1111,10 @@
               <div class="tags">
                 <span class="tag industry">文化艺术</span>
                 <span class="tag medium">品牌VI</span>
+                
               </div>
               <div class="brief">影视制作公司品牌形象与视觉系统设计</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 2,039</span>
                 <span class="views">👁️ 18,005</span>
@@ -803,8 +1130,10 @@
               <div class="tags">
                 <span class="tag industry">科技</span>
                 <span class="tag medium">品牌VI</span>
+                
               </div>
               <div class="brief">品牌识别结合产品界面的一体化设计</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 1,696</span>
                 <span class="views">👁️ 15,352</span>
@@ -820,8 +1149,10 @@
               <div class="tags">
                 <span class="tag industry">食品饮料</span>
                 <span class="tag medium">品牌VI</span>
+                
               </div>
               <div class="brief">ARTICA品牌视觉识别系统与形象设计</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 1,406</span>
                 <span class="views">👁️ 14,443</span>
@@ -837,8 +1168,10 @@
               <div class="tags">
                 <span class="tag industry">设计服务</span>
                 <span class="tag medium">品牌VI</span>
+                
               </div>
               <div class="brief">独立设计工作室的品牌形象展示</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 1,187</span>
                 <span class="views">👁️ 8,241</span>
@@ -854,8 +1187,10 @@
               <div class="tags">
                 <span class="tag industry">时尚</span>
                 <span class="tag medium">UI/UX</span>
+                
               </div>
               <div class="brief">时尚品牌个人主页与交互界面设计</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 1,094</span>
                 <span class="views">👁️ 6,927</span>
@@ -872,15 +1207,17 @@
           </div>
           <div class="cards">
           <div class="card top3">
-            <div class="rank">🥇</div>
+            <div class="rank">1</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/311e61223625807.Y3JvcCwzMzk1LDI2NTUsMzE5LDIwNjc.jpg" alt="Call Me Latter" loading="lazy"></div>
             <div class="info">
               <div class="title"><a href="https://www.behance.net/gallery/223625807/Call-Me-Latter" target="_blank">Call Me Latter</a></div>
               <div class="tags">
                 <span class="tag industry">设计服务</span>
                 <span class="tag medium">品牌VI</span>
+                
               </div>
               <div class="brief">品牌命名与视觉识别系统设计</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 4,814</span>
                 <span class="views">👁️ 46,321</span>
@@ -889,15 +1226,17 @@
           </div>
 
           <div class="card top3">
-            <div class="rank">🥈</div>
+            <div class="rank">2</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/7d9c69236873481.Y3JvcCwxMjEyLDk0OCwwLDA.png" alt="Spectra Eye Clinic — UX/UI" loading="lazy"></div>
             <div class="info">
               <div class="title"><a href="https://www.behance.net/gallery/236873481/Spectra-Eye-Clinic-UXUI" target="_blank">Spectra Eye Clinic — UX/UI</a></div>
               <div class="tags">
                 <span class="tag industry">医疗健康</span>
                 <span class="tag medium">UI/UX</span>
+                
               </div>
               <div class="brief">眼科诊所预约与服务界面设计</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 3,409</span>
                 <span class="views">👁️ 37,316</span>
@@ -906,15 +1245,17 @@
           </div>
 
           <div class="card top3">
-            <div class="rank">🥉</div>
+            <div class="rank">3</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/f3afc8244803829.Y3JvcCw4MDgsNjMyLDAsMA.png" alt="PORTFOLIO 2026 - GRAPHIC DESIGNER &amp; ILLUSTRATOR" loading="lazy"></div>
             <div class="info">
               <div class="title"><a href="https://www.behance.net/gallery/244803829/PORTFOLIO-2026-GRAPHIC-DESIGNER-ILLUSTRATOR" target="_blank">PORTFOLIO 2026 - GRAPHIC DESIGNER &amp; ILLUSTRATOR</a></div>
               <div class="tags">
                 <span class="tag industry">设计服务</span>
                 <span class="tag medium">UI/UX</span>
+                
               </div>
               <div class="brief">设计师个人作品集网站界面</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 2,469</span>
                 <span class="views">👁️ 30,503</span>
@@ -930,8 +1271,10 @@
               <div class="tags">
                 <span class="tag industry">医疗健康</span>
                 <span class="tag medium">UI/UX</span>
+                
               </div>
               <div class="brief">面向老龄健康管理的追踪应用界面</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 2,186</span>
                 <span class="views">👁️ 17,885</span>
@@ -947,8 +1290,10 @@
               <div class="tags">
                 <span class="tag industry">科技</span>
                 <span class="tag medium">品牌VI</span>
+                
               </div>
               <div class="brief">品牌形象与产品界面一体化设计</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 1,676</span>
                 <span class="views">👁️ 15,000</span>
@@ -964,8 +1309,10 @@
               <div class="tags">
                 <span class="tag industry">文化艺术</span>
                 <span class="tag medium">品牌VI</span>
+                
               </div>
               <div class="brief">艺术品牌识别与视觉系统设计</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 1,377</span>
                 <span class="views">👁️ 14,148</span>
@@ -981,8 +1328,10 @@
               <div class="tags">
                 <span class="tag industry">设计服务</span>
                 <span class="tag medium">品牌VI</span>
+                
               </div>
               <div class="brief">品牌标识与基础视觉体系设计</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 1,130</span>
                 <span class="views">👁️ 7,720</span>
@@ -998,8 +1347,10 @@
               <div class="tags">
                 <span class="tag industry">设计服务</span>
                 <span class="tag medium">品牌VI</span>
+                
               </div>
               <div class="brief">设计师个人作品集展示页面</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 1,080</span>
                 <span class="views">👁️ 21,357</span>
@@ -1015,8 +1366,10 @@
               <div class="tags">
                 <span class="tag industry">时尚</span>
                 <span class="tag medium">UI/UX</span>
+                
               </div>
               <div class="brief">个人作品集与品牌展示界面设计</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 1,063</span>
                 <span class="views">👁️ 6,527</span>
@@ -1032,8 +1385,10 @@
               <div class="tags">
                 <span class="tag industry">珠宝/奢侈品</span>
                 <span class="tag medium">UI/UX</span>
+                
               </div>
               <div class="brief">珠宝品牌线上展示与体验设计</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 895</span>
                 <span class="views">👁️ 5,426</span>
@@ -1050,15 +1405,17 @@
           </div>
           <div class="cards">
           <div class="card top3">
-            <div class="rank">🥇</div>
+            <div class="rank">1</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/311e61223625807.Y3JvcCwzMzk1LDI2NTUsMzE5LDIwNjc.jpg" alt="Call Me Latter" loading="lazy"></div>
             <div class="info">
               <div class="title"><a href="https://www.behance.net/gallery/223625807/Call-Me-Latter" target="_blank">Call Me Latter</a></div>
               <div class="tags">
                 <span class="tag industry">餐饮</span>
                 <span class="tag medium">品牌VI</span>
+                
               </div>
               <div class="brief">咖啡品牌全案视觉识别系统设计，涵盖标志、包装与物料</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 4,702</span>
                 <span class="views">👁️ 45,407</span>
@@ -1067,15 +1424,17 @@
           </div>
 
           <div class="card top3">
-            <div class="rank">🥈</div>
+            <div class="rank">2</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/f3afc8244803829.Y3JvcCw4MDgsNjMyLDAsMA.png" alt="PORTFOLIO 2026 - GRAPHIC DESIGNER &amp; ILLUSTRATOR" loading="lazy"></div>
             <div class="info">
               <div class="title"><a href="https://www.behance.net/gallery/244803829/PORTFOLIO-2026-GRAPHIC-DESIGNER-ILLUSTRATOR" target="_blank">PORTFOLIO 2026 - GRAPHIC DESIGNER &amp; ILLUSTRATOR</a></div>
               <div class="tags">
                 <span class="tag industry">设计服务</span>
                 <span class="tag medium">平面设计/插画</span>
+                
               </div>
               <div class="brief">设计师2026年度作品集，展示平面与插画综合能力</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 2,320</span>
                 <span class="views">👁️ 27,860</span>
@@ -1084,15 +1443,17 @@
           </div>
 
           <div class="card top3">
-            <div class="rank">🥉</div>
+            <div class="rank">3</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/7e66d8242023175.Y3JvcCwzMjMyLDI1MjgsMCww.jpg" alt="UI/UX for Wellness Aging Care Mood &amp; Meds Tracking app" loading="lazy"></div>
             <div class="info">
               <div class="title"><a href="https://www.behance.net/gallery/242023175/UIUX-for-Wellness-Aging-Care-Mood-Meds-Tracking-app" target="_blank">UI/UX for Wellness Aging Care Mood &amp; Meds Tracking app</a></div>
               <div class="tags">
                 <span class="tag industry">医疗健康</span>
                 <span class="tag medium">UI/UX</span>
+                
               </div>
               <div class="brief">老年健康护理App，追踪情绪与用药的界面设计</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 2,091</span>
                 <span class="views">👁️ 16,438</span>
@@ -1108,8 +1469,10 @@
               <div class="tags">
                 <span class="tag industry">时尚/生活方式</span>
                 <span class="tag medium">品牌VI</span>
+                
               </div>
               <div class="brief">ARTICA品牌视觉识别系统，极简北欧风格设计</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 1,314</span>
                 <span class="views">👁️ 13,632</span>
@@ -1125,8 +1488,10 @@
               <div class="tags">
                 <span class="tag industry">文化艺术</span>
                 <span class="tag medium">平面设计</span>
+                
               </div>
               <div class="brief">创意Brief主题的实验性平面设计项目</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 1,042</span>
                 <span class="views">👁️ 6,737</span>
@@ -1142,8 +1507,10 @@
               <div class="tags">
                 <span class="tag industry">设计服务</span>
                 <span class="tag medium">品牌VI/平面设计</span>
+                
               </div>
               <div class="brief">设计师年度精选作品集，涵盖品牌与视觉项目</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 992</span>
                 <span class="views">👁️ 18,378</span>
@@ -1159,8 +1526,10 @@
               <div class="tags">
                 <span class="tag industry">设计服务</span>
                 <span class="tag medium">UI/UX</span>
+                
               </div>
               <div class="brief">UX/UI设计师个人作品集，展示交互与界面设计</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 979</span>
                 <span class="views">👁️ 5,754</span>
@@ -1176,8 +1545,10 @@
               <div class="tags">
                 <span class="tag industry">珠宝/奢侈品</span>
                 <span class="tag medium">品牌VI</span>
+                
               </div>
               <div class="brief">高端珠宝品牌视觉设计，优雅精致的标识与物料</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 820</span>
                 <span class="views">👁️ 4,701</span>
@@ -1193,8 +1564,10 @@
               <div class="tags">
                 <span class="tag industry">设计服务</span>
                 <span class="tag medium">平面设计</span>
+                
               </div>
               <div class="brief">设计师作品集，展示多领域平面设计综合实力</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 756</span>
                 <span class="views">👁️ 19,545</span>
@@ -1210,8 +1583,10 @@
               <div class="tags">
                 <span class="tag industry">餐饮/茶饮</span>
                 <span class="tag medium">包装设计/品牌VI</span>
+                
               </div>
               <div class="brief">快茶品牌全案，从标志到茶饮包装的系统设计</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 533</span>
                 <span class="views">👁️ 3,792</span>
@@ -1228,15 +1603,17 @@
           </div>
           <div class="cards">
           <div class="card top3">
-            <div class="rank">🥇</div>
+            <div class="rank">1</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/c7a1f3233647177.Y3JvcCwxMjAwLDkzOCwwLDA.jpg" alt="VOOO" loading="lazy"></div>
             <div class="info">
               <div class="title"><a href="https://www.behance.net/gallery/233647177/VOOO" target="_blank">VOOO</a></div>
               <div class="tags">
                 <span class="tag industry">科技</span>
                 <span class="tag medium">品牌VI</span>
+                
               </div>
               <div class="brief">科技品牌全案视觉设计，极简未来感标识系统</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 994</span>
                 <span class="views">👁️ 10,538</span>
@@ -1245,15 +1622,17 @@
           </div>
 
           <div class="card top3">
-            <div class="rank">🥈</div>
+            <div class="rank">2</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/5e0e47232541177.Y3JvcCwyMDQ4LDE2MDIsMCww.jpg" alt="XPENG X9" loading="lazy"></div>
             <div class="info">
               <div class="title"><a href="https://www.behance.net/gallery/232541177/XPENG-X9" target="_blank">XPENG X9</a></div>
               <div class="tags">
                 <span class="tag industry">汽车</span>
                 <span class="tag medium">产品设计/3D渲染</span>
+                
               </div>
               <div class="brief">小鹏X9汽车造型设计展示，科技感MPV概念</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 632</span>
                 <span class="views">👁️ 4,305</span>
@@ -1262,15 +1641,17 @@
           </div>
 
           <div class="card top3">
-            <div class="rank">🥉</div>
+            <div class="rank">3</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/ab1234234120000.Y3JvcCwxMjAwLDkzOCwwLDA.jpg" alt="Samsung Weather App" loading="lazy"></div>
             <div class="info">
               <div class="title"><a href="https://www.behance.net/gallery/234120000/Samsung-Weather-App" target="_blank">Samsung Weather App</a></div>
               <div class="tags">
                 <span class="tag industry">科技/消费电子</span>
                 <span class="tag medium">UI/UX</span>
+                
               </div>
               <div class="brief">三星天气App重设计，清爽直观的天气界面体验</div>
+              
               <div class="stats">
                 <span class="appreciations">❤️ 76</span>
                 <span class="views">👁️ 451</span>
@@ -1279,6 +1660,7 @@
           </div>
           </div>
         </section>
+      </div>
       <footer>Powered by AOI 🔷 · 数据来源: Behance</footer>
     </div>
   </div>
@@ -1290,6 +1672,8 @@
       if (target) target.style.display = '';
       const btn = document.querySelector('.date-btn[data-date="' + date + '"]');
       if (btn) btn.classList.add('active');
+      const wrap = document.querySelector('.history-wrap');
+      if (wrap) wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   </script>
 </body>
