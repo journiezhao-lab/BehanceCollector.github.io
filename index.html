@@ -36,7 +36,7 @@
     }
     .date-btn .wd { font-size: 11px; color: #555; }
     .date-btn.active .wd { color: #6f8fcf; }
-    .main { flex: 1; max-width: 920px; padding: 24px 24px 60px; }
+    .main { flex: 1; max-width: 1120px; padding: 24px 24px 60px; }
     header {
       padding: 32px 0 20px; border-bottom: 1px solid #222;
       margin-bottom: 24px;
@@ -93,15 +93,15 @@
       border-radius: 8px; overflow: hidden;
       background: #1a1a1a; flex-shrink: 0;
     }
-    .cover-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .cover-wrap img, .library-cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
     .title {
       font-size: 14px; font-weight: 600; color: #e8e8e8;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
-    .title a { color: #e8e8e8; text-decoration: none; }
-    .title a:hover { color: #1769ff; }
-    .tags { display: flex; gap: 5px; flex-wrap: wrap; }
+    .title a, .library-title a { color: #e8e8e8; text-decoration: none; }
+    .title a:hover, .library-title a:hover { color: #1769ff; }
+    .tags, .library-tags { display: flex; gap: 5px; flex-wrap: wrap; }
     .tag {
       font-size: 11px; padding: 2px 7px;
       border-radius: 999px; font-weight: 500;
@@ -109,18 +109,39 @@
     .tag.industry { background: #1a2a1a; color: #6fcf6f; }
     .tag.medium { background: #1a1a2a; color: #6f8fcf; }
     .tag.trend { background: #2a1d12; color: #f6b26b; }
-    .brief {
+    .brief, .library-brief {
       font-size: 12px; color: #888; line-height: 1.45;
       display: -webkit-box; -webkit-line-clamp: 2;
       -webkit-box-orient: vertical; overflow: hidden;
     }
-    .meta { font-size: 11px; color: #666; line-height: 1.5; }
+    .meta, .library-meta { font-size: 11px; color: #666; line-height: 1.5; }
     .stats {
       font-size: 11px; color: #555;
       display: flex; gap: 12px; margin-top: auto;
     }
     .appreciations { color: #e8556d; }
     .views { color: #777; }
+    .library-toolbar {
+      display: flex; align-items: flex-start; gap: 14px; margin-bottom: 16px; flex-wrap: wrap;
+    }
+    .filter-title { font-size: 12px; color: #666; padding-top: 6px; }
+    .filter-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .filter-chip {
+      border: 1px solid #2a2a2a; background: #111; color: #bbb; border-radius: 999px;
+      padding: 6px 12px; font-size: 12px; cursor: pointer; transition: all 0.15s;
+    }
+    .filter-chip:hover { border-color: #3d3d3d; color: #fff; }
+    .filter-chip.active { background: #1769ff; border-color: #1769ff; color: #fff; }
+    .library-grid {
+      display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px;
+    }
+    .library-card {
+      background: #111; border: 1px solid #171717; border-radius: 14px; overflow: hidden;
+      display: flex; flex-direction: column; min-height: 100%;
+    }
+    .library-cover { aspect-ratio: 16 / 10; background: #1a1a1a; }
+    .library-body { padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+    .library-title { font-size: 14px; font-weight: 600; line-height: 1.4; min-height: 40px; }
     .history-wrap { margin-top: 34px; padding-top: 8px; border-top: 1px solid #161616; }
     .history-title { font-size: 16px; color: #888; margin-bottom: 16px; }
     .empty { text-align: center; padding: 60px 20px; color: #555; }
@@ -130,6 +151,9 @@
     footer {
       text-align: center; padding: 24px 0; color: #333;
       font-size: 11px; border-top: 1px solid #141414; margin-top: 40px;
+    }
+    @media (max-width: 980px) {
+      .library-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
     @media (max-width: 768px) {
       .layout { flex-direction: column; }
@@ -149,6 +173,7 @@
       .cover-wrap { width: 100px; min-width: 100px; height: 72px; }
       .title { font-size: 13px; }
       .feature-header, .day-header { align-items: flex-start; flex-direction: column; gap: 6px; }
+      .library-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -167,7 +192,7 @@
     <div class="main">
       <header>
         <h1>🎨 Behance Weekly Trend Board 🔷</h1>
-        <p>基于最近一周抓取结果重新整理：把重复项目从“噪音”转成“持续热度”信号。首页优先看今日新增热点与持续热门，历史日榜仍可回溯查看。</p>
+        <p>基于最近一周抓取结果重新整理：把重复项目从“噪音”转成“持续热度”信号；同时新增本周案例库，聚合全部去重案例并支持按行业筛选。</p>
       </header>
       
         <section class="summary-panel">
@@ -404,6 +429,296 @@
           </div>
           </div>
         </section>
+
+        <section class="feature-section" id="weekly-library">
+          <div class="feature-header">
+            <div>
+              <h2>本周案例库</h2>
+              <p>聚合最近一周收录的全部去重案例，不按热度排序，适合横向翻找灵感。</p>
+            </div>
+            <span class="feature-count">26 项</span>
+          </div>
+          <div class="library-toolbar">
+            <div class="filter-title">按行业筛选</div>
+            <div class="filter-chips">
+                <button class="filter-chip active" data-industry="全部行业" onclick="filterLibrary('全部行业', this)">全部行业</button>
+                <button class="filter-chip " data-industry="餐饮" onclick="filterLibrary('餐饮', this)">餐饮</button>
+                <button class="filter-chip " data-industry="餐饮/茶饮" onclick="filterLibrary('餐饮/茶饮', this)">餐饮/茶饮</button>
+                <button class="filter-chip " data-industry="科技" onclick="filterLibrary('科技', this)">科技</button>
+                <button class="filter-chip " data-industry="科技/消费电子" onclick="filterLibrary('科技/消费电子', this)">科技/消费电子</button>
+                <button class="filter-chip " data-industry="美妆" onclick="filterLibrary('美妆', this)">美妆</button>
+                <button class="filter-chip " data-industry="汽车" onclick="filterLibrary('汽车', this)">汽车</button>
+                <button class="filter-chip " data-industry="设计服务" onclick="filterLibrary('设计服务', this)">设计服务</button>
+                <button class="filter-chip " data-industry="时尚" onclick="filterLibrary('时尚', this)">时尚</button>
+                <button class="filter-chip " data-industry="时尚/生活方式" onclick="filterLibrary('时尚/生活方式', this)">时尚/生活方式</button>
+                <button class="filter-chip " data-industry="食品饮料" onclick="filterLibrary('食品饮料', this)">食品饮料</button>
+                <button class="filter-chip " data-industry="文化艺术" onclick="filterLibrary('文化艺术', this)">文化艺术</button>
+                <button class="filter-chip " data-industry="医疗健康" onclick="filterLibrary('医疗健康', this)">医疗健康</button>
+                <button class="filter-chip " data-industry="珠宝/奢侈品" onclick="filterLibrary('珠宝/奢侈品', this)">珠宝/奢侈品</button>
+            </div>
+          </div>
+          <div class="library-grid" id="library-grid">
+          <article class="library-card" data-industry="科技/消费电子" data-title="Samsung Weather App">
+            <div class="library-cover"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/ab1234234120000.Y3JvcCwxMjAwLDkzOCwwLDA.jpg" alt="Samsung Weather App" loading="lazy"></div>
+            <div class="library-body">
+              <div class="library-title"><a href="https://www.behance.net/gallery/234120000/Samsung-Weather-App" target="_blank">Samsung Weather App</a></div>
+              <div class="library-tags"><span class="tag industry">科技/消费电子</span><span class="tag medium">UI/UX</span><span class="tag trend">本周收录 1 次</span></div>
+              <div class="library-brief">三星天气App重设计，清爽直观的天气界面体验</div>
+              <div class="library-meta">首次收录 2026-03-26 · 最近出现 2026-03-26</div>
+            </div>
+          </article>
+
+          <article class="library-card" data-industry="科技" data-title="VOOO">
+            <div class="library-cover"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/c7a1f3233647177.Y3JvcCwxMjAwLDkzOCwwLDA.jpg" alt="VOOO" loading="lazy"></div>
+            <div class="library-body">
+              <div class="library-title"><a href="https://www.behance.net/gallery/233647177/VOOO" target="_blank">VOOO</a></div>
+              <div class="library-tags"><span class="tag industry">科技</span><span class="tag medium">品牌VI</span><span class="tag trend">本周收录 1 次</span></div>
+              <div class="library-brief">科技品牌全案视觉设计，极简未来感标识系统</div>
+              <div class="library-meta">首次收录 2026-03-26 · 最近出现 2026-03-26</div>
+            </div>
+          </article>
+
+          <article class="library-card" data-industry="汽车" data-title="XPENG X9">
+            <div class="library-cover"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/5e0e47232541177.Y3JvcCwyMDQ4LDE2MDIsMCww.jpg" alt="XPENG X9" loading="lazy"></div>
+            <div class="library-body">
+              <div class="library-title"><a href="https://www.behance.net/gallery/232541177/XPENG-X9" target="_blank">XPENG X9</a></div>
+              <div class="library-tags"><span class="tag industry">汽车</span><span class="tag medium">产品设计/3D渲染</span><span class="tag trend">本周收录 1 次</span></div>
+              <div class="library-brief">小鹏X9汽车造型设计展示，科技感MPV概念</div>
+              <div class="library-meta">首次收录 2026-03-26 · 最近出现 2026-03-26</div>
+            </div>
+          </article>
+
+          <article class="library-card" data-industry="珠宝/奢侈品" data-title="ARHA Jewellery">
+            <div class="library-cover"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/914a51245967243.Y3JvcCwxOTc4LDE1NDcsNzEwLDI5.jpg" alt="ARHA Jewellery" loading="lazy"></div>
+            <div class="library-body">
+              <div class="library-title"><a href="https://www.behance.net/gallery/245967243/ARHA-Jewellery" target="_blank">ARHA Jewellery</a></div>
+              <div class="library-tags"><span class="tag industry">珠宝/奢侈品</span><span class="tag medium">UI/UX</span><span class="tag medium">品牌VI</span><span class="tag trend">本周出现 2 次</span></div>
+              <div class="library-brief">珠宝品牌线上展示与体验设计</div>
+              <div class="library-meta">首次收录 2026-03-27 · 最近出现 2026-03-30</div>
+            </div>
+          </article>
+
+          <article class="library-card" data-industry="文化艺术" data-title="ARTICA® — ID">
+            <div class="library-cover"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/50a845229381599.Y3JvcCwyMzQ1LDE4MzQsNSw1Mg.png" alt="ARTICA® — ID" loading="lazy"></div>
+            <div class="library-body">
+              <div class="library-title"><a href="https://www.behance.net/gallery/229381599/ARTICA-ID" target="_blank">ARTICA® — ID</a></div>
+              <div class="library-tags"><span class="tag industry">文化艺术</span><span class="tag industry">时尚/生活方式</span><span class="tag industry">食品饮料</span><span class="tag medium">品牌VI</span><span class="tag trend">本周出现 3 次</span></div>
+              <div class="library-brief">ARTICA品牌视觉识别系统与形象设计</div>
+              <div class="library-meta">首次收录 2026-03-27 · 最近出现 2026-03-31</div>
+            </div>
+          </article>
+
+          <article class="library-card" data-industry="文化艺术" data-title="Call Me Latter">
+            <div class="library-cover"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/311e61223625807.Y3JvcCwzMzk1LDI2NTUsMzE5LDIwNjc.jpg" alt="Call Me Latter" loading="lazy"></div>
+            <div class="library-body">
+              <div class="library-title"><a href="https://www.behance.net/gallery/223625807/Call-Me-Latter" target="_blank">Call Me Latter</a></div>
+              <div class="library-tags"><span class="tag industry">文化艺术</span><span class="tag industry">设计服务</span><span class="tag industry">餐饮</span><span class="tag medium">品牌VI</span><span class="tag trend">本周出现 4 次</span></div>
+              <div class="library-brief">以品牌形象为核心的创意识别设计</div>
+              <div class="library-meta">首次收录 2026-03-27 · 最近出现 2026-04-01</div>
+            </div>
+          </article>
+
+          <article class="library-card" data-industry="医疗健康" data-title="Esmée Van Arden — UX/UI">
+            <div class="library-cover"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/63f67b239209175.Y3JvcCwxMjEyLDk0OCwwLDA.png" alt="Esmée Van Arden — UX/UI" loading="lazy"></div>
+            <div class="library-body">
+              <div class="library-title"><a href="https://www.behance.net/gallery/239209175/Esme-Van-Arden-UXUI" target="_blank">Esmée Van Arden — UX/UI</a></div>
+              <div class="library-tags"><span class="tag industry">医疗健康</span><span class="tag industry">时尚</span><span class="tag industry">设计服务</span><span class="tag medium">UI/UX</span><span class="tag trend">本周出现 4 次</span></div>
+              <div class="library-brief">个人化数字平台界面与交互设计</div>
+              <div class="library-meta">首次收录 2026-03-27 · 最近出现 2026-04-01</div>
+            </div>
+          </article>
+
+          <article class="library-card" data-industry="餐饮/茶饮" data-title="Fasttea Branding &amp; Packaging">
+            <div class="library-cover"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/bd7768244771131.Y3JvcCw3NTYsNTkyLDIyNiwyMDQ.png" alt="Fasttea Branding &amp; Packaging" loading="lazy"></div>
+            <div class="library-body">
+              <div class="library-title"><a href="https://www.behance.net/gallery/244771131/Fasttea-Branding-Packaging" target="_blank">Fasttea Branding &amp; Packaging</a></div>
+              <div class="library-tags"><span class="tag industry">餐饮/茶饮</span><span class="tag medium">包装设计/品牌VI</span><span class="tag trend">本周收录 1 次</span></div>
+              <div class="library-brief">快茶品牌全案，从标志到茶饮包装的系统设计</div>
+              <div class="library-meta">首次收录 2026-03-27 · 最近出现 2026-03-27</div>
+            </div>
+          </article>
+
+          <article class="library-card" data-industry="设计服务" data-title="LIM PORTFOLIO">
+            <div class="library-cover"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/8754f7246100327.69bc2a7e5cdea.jpg" alt="LIM PORTFOLIO" loading="lazy"></div>
+            <div class="library-body">
+              <div class="library-title"><a href="https://www.behance.net/gallery/246100327/LIM-PORTFOLIO" target="_blank">LIM PORTFOLIO</a></div>
+              <div class="library-tags"><span class="tag industry">设计服务</span><span class="tag medium">品牌VI</span><span class="tag medium">平面设计</span><span class="tag trend">本周出现 2 次</span></div>
+              <div class="library-brief">个人作品集品牌呈现与视觉包装</div>
+              <div class="library-meta">首次收录 2026-03-27 · 最近出现 2026-04-01</div>
+            </div>
+          </article>
+
+          <article class="library-card" data-industry="文化艺术" data-title="OFFBRiEFF">
+            <div class="library-cover"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/e5e419245685623.Y3JvcCwyNTgzLDIwMjAsMCw2.jpg" alt="OFFBRiEFF" loading="lazy"></div>
+            <div class="library-body">
+              <div class="library-title"><a href="https://www.behance.net/gallery/245685623/OFFBRiEFF" target="_blank">OFFBRiEFF</a></div>
+              <div class="library-tags"><span class="tag industry">文化艺术</span><span class="tag industry">设计服务</span><span class="tag medium">品牌VI</span><span class="tag medium">平面设计</span><span class="tag trend">本周出现 4 次</span></div>
+              <div class="library-brief">高对比实验性视觉识别作品</div>
+              <div class="library-meta">首次收录 2026-03-27 · 最近出现 2026-04-01</div>
+            </div>
+          </article>
+
+          <article class="library-card" data-industry="设计服务" data-title="Portfolio 2026">
+            <div class="library-cover"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/a512de245516287.Y3JvcCwxNjE2LDEyNjQsMCww.png" alt="Portfolio 2026" loading="lazy"></div>
+            <div class="library-body">
+              <div class="library-title"><a href="https://www.behance.net/gallery/245516287/Portfolio-2026" target="_blank">Portfolio 2026</a></div>
+              <div class="library-tags"><span class="tag industry">设计服务</span><span class="tag medium">品牌VI</span><span class="tag medium">品牌VI/平面设计</span><span class="tag trend">本周出现 3 次</span></div>
+              <div class="library-brief">个人作品集视觉识别方案</div>
+              <div class="library-meta">首次收录 2026-03-27 · 最近出现 2026-04-02</div>
+            </div>
+          </article>
+
+          <article class="library-card" data-industry="设计服务" data-title="PORTFOLIO 2026 - GRAPHIC DESIGNER &amp; ILLUSTRATOR">
+            <div class="library-cover"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/f3afc8244803829.Y3JvcCw4MDgsNjMyLDAsMA.png" alt="PORTFOLIO 2026 - GRAPHIC DESIGNER &amp; ILLUSTRATOR" loading="lazy"></div>
+            <div class="library-body">
+              <div class="library-title"><a href="https://www.behance.net/gallery/244803829/PORTFOLIO-2026-GRAPHIC-DESIGNER-ILLUSTRATOR" target="_blank">PORTFOLIO 2026 - GRAPHIC DESIGNER &amp; ILLUSTRATOR</a></div>
+              <div class="library-tags"><span class="tag industry">设计服务</span><span class="tag medium">UI/UX</span><span class="tag medium">品牌VI</span><span class="tag medium">平面海报</span><span class="tag trend">本周出现 6 次</span></div>
+              <div class="library-brief">平面设计师与插画师个人品牌形象</div>
+              <div class="library-meta">首次收录 2026-03-27 · 最近出现 2026-04-03</div>
+            </div>
+          </article>
+
+          <article class="library-card" data-industry="医疗健康" data-title="UI/UX for Wellness Aging Care Mood &amp; Meds Tracking app">
+            <div class="library-cover"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/7e66d8242023175.Y3JvcCwzMjMyLDI1MjgsMCww.jpg" alt="UI/UX for Wellness Aging Care Mood &amp; Meds Tracking app" loading="lazy"></div>
+            <div class="library-body">
+              <div class="library-title"><a href="https://www.behance.net/gallery/242023175/UIUX-for-Wellness-Aging-Care-Mood-Meds-Tracking-app" target="_blank">UI/UX for Wellness Aging Care Mood &amp; Meds Tracking app</a></div>
+              <div class="library-tags"><span class="tag industry">医疗健康</span><span class="tag medium">UI/UX</span><span class="tag trend">本周出现 3 次</span></div>
+              <div class="library-brief">面向老年照护的情绪与用药记录应用</div>
+              <div class="library-meta">首次收录 2026-03-27 · 最近出现 2026-03-31</div>
+            </div>
+          </article>
+
+          <article class="library-card" data-industry="科技" data-title="Postify | Brand Identity &amp; UX UI Design">
+            <div class="library-cover"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/b45e68216710997.Y3JvcCwzMzc1LDI2MzksMCww.png" alt="Postify | Brand Identity &amp; UX UI Design" loading="lazy"></div>
+            <div class="library-body">
+              <div class="library-title"><a href="https://www.behance.net/gallery/216710997/Postify-Brand-Identity-UX-UI-Design" target="_blank">Postify | Brand Identity &amp; UX UI Design</a></div>
+              <div class="library-tags"><span class="tag industry">科技</span><span class="tag medium">品牌VI</span><span class="tag trend">本周出现 3 次</span></div>
+              <div class="library-brief">品牌形象与产品界面一体化设计</div>
+              <div class="library-meta">首次收录 2026-03-30 · 最近出现 2026-04-01</div>
+            </div>
+          </article>
+
+          <article class="library-card" data-industry="医疗健康" data-title="Spectra Eye Clinic — UX/UI">
+            <div class="library-cover"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/7d9c69236873481.Y3JvcCwxMjEyLDk0OCwwLDA.png" alt="Spectra Eye Clinic — UX/UI" loading="lazy"></div>
+            <div class="library-body">
+              <div class="library-title"><a href="https://www.behance.net/gallery/236873481/Spectra-Eye-Clinic-UXUI" target="_blank">Spectra Eye Clinic — UX/UI</a></div>
+              <div class="library-tags"><span class="tag industry">医疗健康</span><span class="tag medium">UI/UX</span><span class="tag trend">本周出现 3 次</span></div>
+              <div class="library-brief">眼科诊所网站与预约体验界面设计</div>
+              <div class="library-meta">首次收录 2026-03-30 · 最近出现 2026-04-01</div>
+            </div>
+          </article>
+
+          <article class="library-card" data-industry="设计服务" data-title="Graphic Design - Portfolio">
+            <div class="library-cover"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/4cd0d9220534229.Y3JvcCwyNDI0LDE4OTYsMCww.png" alt="Graphic Design - Portfolio" loading="lazy"></div>
+            <div class="library-body">
+              <div class="library-title"><a href="https://www.behance.net/gallery/220534229/Graphic-Design-Portfolio" target="_blank">Graphic Design - Portfolio</a></div>
+              <div class="library-tags"><span class="tag industry">设计服务</span><span class="tag medium">品牌VI</span><span class="tag medium">平面设计/作品集</span><span class="tag trend">本周出现 3 次</span></div>
+              <div class="library-brief">个人平面设计作品集展示</div>
+              <div class="library-meta">首次收录 2026-03-31 · 最近出现 2026-04-03</div>
+            </div>
+          </article>
+
+          <article class="library-card" data-industry="文化艺术" data-title="Mandrill Films">
+            <div class="library-cover"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/959c53221124099.Y3JvcCw5OTUsNzc4LDIxMSwxNDc.jpg" alt="Mandrill Films" loading="lazy"></div>
+            <div class="library-body">
+              <div class="library-title"><a href="https://www.behance.net/gallery/221124099/Mandrill-Films" target="_blank">Mandrill Films</a></div>
+              <div class="library-tags"><span class="tag industry">文化艺术</span><span class="tag medium">品牌VI</span><span class="tag trend">本周出现 3 次</span></div>
+              <div class="library-brief">影视制作公司品牌识别系统</div>
+              <div class="library-meta">首次收录 2026-03-31 · 最近出现 2026-04-02</div>
+            </div>
+          </article>
+
+          <article class="library-card" data-industry="餐饮" data-title="Emma Greek Restaurant">
+            <div class="library-cover"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/a6f652229332377.Y3JvcCwxODg1LDE0NzQsMCww.jpg" alt="Emma Greek Restaurant" loading="lazy"></div>
+            <div class="library-body">
+              <div class="library-title"><a href="https://www.behance.net/gallery/229332377/Emma-Greek-Restaurant" target="_blank">Emma Greek Restaurant</a></div>
+              <div class="library-tags"><span class="tag industry">餐饮</span><span class="tag medium">品牌VI</span><span class="tag trend">本周出现 3 次</span></div>
+              <div class="library-brief">希腊餐厅品牌视觉识别设计</div>
+              <div class="library-meta">首次收录 2026-04-01 · 最近出现 2026-04-03</div>
+            </div>
+          </article>
+
+          <article class="library-card" data-industry="美妆" data-title="EGO®">
+            <div class="library-cover"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/57305a245804117.Y3JvcCwxNjE2LDEyNjQsMCww.png" alt="EGO®" loading="lazy"></div>
+            <div class="library-body">
+              <div class="library-title"><a href="https://www.behance.net/gallery/245804117/EGO" target="_blank">EGO®</a></div>
+              <div class="library-tags"><span class="tag industry">美妆</span><span class="tag medium">品牌VI</span><span class="tag trend">本周收录 1 次</span></div>
+              <div class="library-brief">EGO品牌视觉识别与形象设计</div>
+              <div class="library-meta">首次收录 2026-04-02 · 最近出现 2026-04-02</div>
+            </div>
+          </article>
+
+          <article class="library-card" data-industry="餐饮" data-title="K-FFE">
+            <div class="library-cover"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/100ebd230349175.Y3JvcCwzMzY2LDI2MzMsMCww.jpg" alt="K-FFE" loading="lazy"></div>
+            <div class="library-body">
+              <div class="library-title"><a href="https://www.behance.net/gallery/230349175/K-FFE" target="_blank">K-FFE</a></div>
+              <div class="library-tags"><span class="tag industry">餐饮</span><span class="tag medium">品牌VI</span><span class="tag trend">本周出现 2 次</span></div>
+              <div class="library-brief">咖啡品牌视觉识别与标志设计</div>
+              <div class="library-meta">首次收录 2026-04-02 · 最近出现 2026-04-03</div>
+            </div>
+          </article>
+
+          <article class="library-card" data-industry="设计服务" data-title="March Practices">
+            <div class="library-cover"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/2977ee246185287.Y3JvcCwxNjU5LDEyOTcsMCwzMTI.png" alt="March Practices" loading="lazy"></div>
+            <div class="library-body">
+              <div class="library-title"><a href="https://www.behance.net/gallery/246185287/March-Practices" target="_blank">March Practices</a></div>
+              <div class="library-tags"><span class="tag industry">设计服务</span><span class="tag medium">平面海报</span><span class="tag trend">本周出现 2 次</span></div>
+              <div class="library-brief">平面设计项目合集展示</div>
+              <div class="library-meta">首次收录 2026-04-02 · 最近出现 2026-04-03</div>
+            </div>
+          </article>
+
+          <article class="library-card" data-industry="科技" data-title="Pace+ Visual Identity">
+            <div class="library-cover"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/49daf2231345043.Y3JvcCwxNDk5LDExNzMsMCww.jpg" alt="Pace+ Visual Identity" loading="lazy"></div>
+            <div class="library-body">
+              <div class="library-title"><a href="https://www.behance.net/gallery/231345043/Pace-Visual-Identity" target="_blank">Pace+ Visual Identity</a></div>
+              <div class="library-tags"><span class="tag industry">科技</span><span class="tag industry">设计服务</span><span class="tag medium">品牌VI</span><span class="tag trend">本周出现 2 次</span></div>
+              <div class="library-brief">现代品牌视觉识别系统设计</div>
+              <div class="library-meta">首次收录 2026-04-02 · 最近出现 2026-04-03</div>
+            </div>
+          </article>
+
+          <article class="library-card" data-industry="科技" data-title="SATO — Visual Identity">
+            <div class="library-cover"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/a36aef229757493.Y3JvcCwxMTU1LDkwNCwwLDA.jpg" alt="SATO — Visual Identity" loading="lazy"></div>
+            <div class="library-body">
+              <div class="library-title"><a href="https://www.behance.net/gallery/229757493/SATO-Visual-Identity" target="_blank">SATO — Visual Identity</a></div>
+              <div class="library-tags"><span class="tag industry">科技</span><span class="tag industry">设计服务</span><span class="tag medium">品牌VI</span><span class="tag trend">本周出现 2 次</span></div>
+              <div class="library-brief">品牌视觉形象与识别系统设计</div>
+              <div class="library-meta">首次收录 2026-04-02 · 最近出现 2026-04-03</div>
+            </div>
+          </article>
+
+          <article class="library-card" data-industry="餐饮" data-title="Ufobean Coffee">
+            <div class="library-cover"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/f5dc35245683949.Y3JvcCw4MDgsNjMyLDAsMA.png" alt="Ufobean Coffee" loading="lazy"></div>
+            <div class="library-body">
+              <div class="library-title"><a href="https://www.behance.net/gallery/245683949/Ufobean-Coffee" target="_blank">Ufobean Coffee</a></div>
+              <div class="library-tags"><span class="tag industry">餐饮</span><span class="tag medium">包装设计</span><span class="tag trend">本周出现 2 次</span></div>
+              <div class="library-brief">咖啡品牌包装与视觉系统设计</div>
+              <div class="library-meta">首次收录 2026-04-02 · 最近出现 2026-04-03</div>
+            </div>
+          </article>
+
+          <article class="library-card" data-industry="餐饮" data-title="CASA MADRE - Heritage Pantry">
+            <div class="library-cover"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/68f10a221379385.Y3JvcCw1MDUwLDM5NTAsMCww.jpg" alt="CASA MADRE - Heritage Pantry" loading="lazy"></div>
+            <div class="library-body">
+              <div class="library-title"><a href="https://www.behance.net/gallery/221379385/CASA-MADRE-Heritage-Pantry" target="_blank">CASA MADRE - Heritage Pantry</a></div>
+              <div class="library-tags"><span class="tag industry">餐饮</span><span class="tag medium">品牌VI</span><span class="tag trend">本周收录 1 次</span></div>
+              <div class="library-brief">传统食品品牌视觉形象设计</div>
+              <div class="library-meta">首次收录 2026-04-03 · 最近出现 2026-04-03</div>
+            </div>
+          </article>
+
+          <article class="library-card" data-industry="科技" data-title="Sandisk - Packaging Design &amp; 3D Renderings">
+            <div class="library-cover"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/8a6a55246683387.Y3JvcCwyNzk5LDIxOTAsMCww.jpg" alt="Sandisk - Packaging Design &amp; 3D Renderings" loading="lazy"></div>
+            <div class="library-body">
+              <div class="library-title"><a href="https://www.behance.net/gallery/246683387/Sandisk-Packaging-Design-3D-Renderings" target="_blank">Sandisk - Packaging Design &amp; 3D Renderings</a></div>
+              <div class="library-tags"><span class="tag industry">科技</span><span class="tag medium">包装设计</span><span class="tag trend">本周收录 1 次</span></div>
+              <div class="library-brief">存储设备包装及3D效果呈现</div>
+              <div class="library-meta">首次收录 2026-04-03 · 最近出现 2026-04-03</div>
+            </div>
+          </article>
+          </div>
+        </section>
       
       <div class="history-wrap">
         <div class="history-title">历史每日榜单</div>
@@ -414,7 +729,7 @@
             <span class="day-count">10 个作品</span>
           </div>
           <div class="cards">
-          <div class="card top3">
+          <div class="card ">
             <div class="rank">1</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/4cd0d9220534229.Y3JvcCwyNDI0LDE4OTYsMCww.png" alt="Graphic Design - Portfolio" loading="lazy"></div>
             <div class="info">
@@ -433,7 +748,7 @@
             </div>
           </div>
 
-          <div class="card top3">
+          <div class="card ">
             <div class="rank">2</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/f3afc8244803829.Y3JvcCw4MDgsNjMyLDAsMA.png" alt="PORTFOLIO 2026 - GRAPHIC DESIGNER &amp; ILLUSTRATOR" loading="lazy"></div>
             <div class="info">
@@ -452,7 +767,7 @@
             </div>
           </div>
 
-          <div class="card top3">
+          <div class="card ">
             <div class="rank">3</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/a6f652229332377.Y3JvcCwxODg1LDE0NzQsMCww.jpg" alt="Emma Greek Restaurant" loading="lazy"></div>
             <div class="info">
@@ -612,7 +927,7 @@
             <span class="day-count">10 个作品</span>
           </div>
           <div class="cards">
-          <div class="card top3">
+          <div class="card ">
             <div class="rank">1</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/f3afc8244803829.Y3JvcCw4MDgsNjMyLDAsMA.png" alt="PORTFOLIO 2026 - GRAPHIC DESIGNER &amp; ILLUSTRATOR" loading="lazy"></div>
             <div class="info">
@@ -631,7 +946,7 @@
             </div>
           </div>
 
-          <div class="card top3">
+          <div class="card ">
             <div class="rank">2</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/959c53221124099.Y3JvcCw5OTUsNzc4LDIxMSwxNDc.jpg" alt="Mandrill Films" loading="lazy"></div>
             <div class="info">
@@ -650,7 +965,7 @@
             </div>
           </div>
 
-          <div class="card top3">
+          <div class="card ">
             <div class="rank">3</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/a6f652229332377.Y3JvcCwxODg1LDE0NzQsMCww.jpg" alt="Emma Greek Restaurant" loading="lazy"></div>
             <div class="info">
@@ -810,7 +1125,7 @@
             <span class="day-count">10 个作品</span>
           </div>
           <div class="cards">
-          <div class="card top3">
+          <div class="card ">
             <div class="rank">1</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/4cd0d9220534229.Y3JvcCwyNDI0LDE4OTYsMCww.png" alt="Graphic Design - Portfolio" loading="lazy"></div>
             <div class="info">
@@ -829,7 +1144,7 @@
             </div>
           </div>
 
-          <div class="card top3">
+          <div class="card ">
             <div class="rank">2</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/311e61223625807.Y3JvcCwzMzk1LDI2NTUsMzE5LDIwNjc.jpg" alt="Call Me Latter" loading="lazy"></div>
             <div class="info">
@@ -848,7 +1163,7 @@
             </div>
           </div>
 
-          <div class="card top3">
+          <div class="card ">
             <div class="rank">3</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/7d9c69236873481.Y3JvcCwxMjEyLDk0OCwwLDA.png" alt="Spectra Eye Clinic — UX/UI" loading="lazy"></div>
             <div class="info">
@@ -1008,7 +1323,7 @@
             <span class="day-count">10 个作品</span>
           </div>
           <div class="cards">
-          <div class="card top3">
+          <div class="card ">
             <div class="rank">1</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/4cd0d9220534229.Y3JvcCwyNDI0LDE4OTYsMCww.png" alt="Graphic Design - Portfolio" loading="lazy"></div>
             <div class="info">
@@ -1027,7 +1342,7 @@
             </div>
           </div>
 
-          <div class="card top3">
+          <div class="card ">
             <div class="rank">2</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/311e61223625807.Y3JvcCwzMzk1LDI2NTUsMzE5LDIwNjc.jpg" alt="Call Me Latter" loading="lazy"></div>
             <div class="info">
@@ -1046,7 +1361,7 @@
             </div>
           </div>
 
-          <div class="card top3">
+          <div class="card ">
             <div class="rank">3</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/7d9c69236873481.Y3JvcCwxMjEyLDk0OCwwLDA.png" alt="Spectra Eye Clinic — UX/UI" loading="lazy"></div>
             <div class="info">
@@ -1206,7 +1521,7 @@
             <span class="day-count">10 个作品</span>
           </div>
           <div class="cards">
-          <div class="card top3">
+          <div class="card ">
             <div class="rank">1</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/311e61223625807.Y3JvcCwzMzk1LDI2NTUsMzE5LDIwNjc.jpg" alt="Call Me Latter" loading="lazy"></div>
             <div class="info">
@@ -1225,7 +1540,7 @@
             </div>
           </div>
 
-          <div class="card top3">
+          <div class="card ">
             <div class="rank">2</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/7d9c69236873481.Y3JvcCwxMjEyLDk0OCwwLDA.png" alt="Spectra Eye Clinic — UX/UI" loading="lazy"></div>
             <div class="info">
@@ -1244,7 +1559,7 @@
             </div>
           </div>
 
-          <div class="card top3">
+          <div class="card ">
             <div class="rank">3</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/f3afc8244803829.Y3JvcCw4MDgsNjMyLDAsMA.png" alt="PORTFOLIO 2026 - GRAPHIC DESIGNER &amp; ILLUSTRATOR" loading="lazy"></div>
             <div class="info">
@@ -1404,7 +1719,7 @@
             <span class="day-count">10 个作品</span>
           </div>
           <div class="cards">
-          <div class="card top3">
+          <div class="card ">
             <div class="rank">1</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/311e61223625807.Y3JvcCwzMzk1LDI2NTUsMzE5LDIwNjc.jpg" alt="Call Me Latter" loading="lazy"></div>
             <div class="info">
@@ -1423,7 +1738,7 @@
             </div>
           </div>
 
-          <div class="card top3">
+          <div class="card ">
             <div class="rank">2</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/f3afc8244803829.Y3JvcCw4MDgsNjMyLDAsMA.png" alt="PORTFOLIO 2026 - GRAPHIC DESIGNER &amp; ILLUSTRATOR" loading="lazy"></div>
             <div class="info">
@@ -1442,7 +1757,7 @@
             </div>
           </div>
 
-          <div class="card top3">
+          <div class="card ">
             <div class="rank">3</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/7e66d8242023175.Y3JvcCwzMjMyLDI1MjgsMCww.jpg" alt="UI/UX for Wellness Aging Care Mood &amp; Meds Tracking app" loading="lazy"></div>
             <div class="info">
@@ -1602,7 +1917,7 @@
             <span class="day-count">3 个作品</span>
           </div>
           <div class="cards">
-          <div class="card top3">
+          <div class="card ">
             <div class="rank">1</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/c7a1f3233647177.Y3JvcCwxMjAwLDkzOCwwLDA.jpg" alt="VOOO" loading="lazy"></div>
             <div class="info">
@@ -1621,7 +1936,7 @@
             </div>
           </div>
 
-          <div class="card top3">
+          <div class="card ">
             <div class="rank">2</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/5e0e47232541177.Y3JvcCwyMDQ4LDE2MDIsMCww.jpg" alt="XPENG X9" loading="lazy"></div>
             <div class="info">
@@ -1640,7 +1955,7 @@
             </div>
           </div>
 
-          <div class="card top3">
+          <div class="card ">
             <div class="rank">3</div>
             <div class="cover-wrap"><img src="https://mir-s3-cdn-cf.behance.net/projects/max_808/ab1234234120000.Y3JvcCwxMjAwLDkzOCwwLDA.jpg" alt="Samsung Weather App" loading="lazy"></div>
             <div class="info">
@@ -1674,6 +1989,15 @@
       if (btn) btn.classList.add('active');
       const wrap = document.querySelector('.history-wrap');
       if (wrap) wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function filterLibrary(industry, el) {
+      document.querySelectorAll('.filter-chip').forEach(btn => btn.classList.remove('active'));
+      if (el) el.classList.add('active');
+      document.querySelectorAll('.library-card').forEach(card => {
+        const val = card.getAttribute('data-industry');
+        card.style.display = (industry === '全部行业' || val === industry) ? '' : 'none';
+      });
     }
   </script>
 </body>
